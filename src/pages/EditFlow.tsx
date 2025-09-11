@@ -323,6 +323,28 @@ const EditFlow: React.FC = () => {
     setError('');
     setSuccess('');
 
+    // 验证必填字段
+    if (formData.filter_countries.length === 0) {
+      setError('请至少选择一个国家');
+      setIsLoading(false);
+      return;
+    }
+    if (formData.filter_devices.length === 0) {
+      setError('请至少选择一个设备类型');
+      setIsLoading(false);
+      return;
+    }
+    if (formData.filter_os.length === 0) {
+      setError('请至少选择一个操作系统');
+      setIsLoading(false);
+      return;
+    }
+    if (formData.filter_browsers.length === 0) {
+      setError('请至少选择一个浏览器');
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const response = await apiService.updateFlow(parseInt(id!), formData);
       
@@ -731,6 +753,7 @@ const EditFlow: React.FC = () => {
                   <option value={0}>阻止</option>
                 </select>
               </div>
+            </div>
           </div>
 
           {/* Numeric Filters */}
@@ -764,266 +787,6 @@ const EditFlow: React.FC = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Advanced Settings */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">高级设置</h3>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                允许的IP地址 (逗号分隔)
-              </label>
-              <input
-                type="text"
-                value={formData.allowed_ips.join(', ')}
-                onChange={(e) => handleAllowedIpsChange(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="192.168.1.1, 10.0.0.1"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                过滤器列表ID
-              </label>
-              <input
-                type="number"
-                name="filter_id"
-                value={formData.filter_id}
-                onChange={handleInputChange}
-                min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              />
-            </div>
-          </div>
-        </div>
-              label="国家列表"
-              options={countries}
-              selectedValues={formData.filter_countries}
-              onChange={(values) => handleMultiSelectChange('filter_countries', values)}
-              placeholder="选择国家..."
-              loading={loadingFilters.countries}
-            />
-
-            <MultiSelect
-              label="设备列表"
-              options={devices}
-              selectedValues={formData.filter_devices}
-              onChange={(values) => handleMultiSelectChange('filter_devices', values)}
-              placeholder="选择设备..."
-              loading={loadingFilters.devices}
-            />
-
-            <MultiSelect
-              label="操作系统列表"
-              options={operatingSystems}
-              selectedValues={formData.filter_os}
-              onChange={(values) => handleMultiSelectChange('filter_os', values)}
-              placeholder="选择操作系统..."
-              loading={loadingFilters.os}
-            />
-
-            <MultiSelect
-              label="浏览器列表"
-              options={browsers}
-              selectedValues={formData.filter_browsers}
-              onChange={(values) => handleMultiSelectChange('filter_browsers', values)}
-              placeholder="选择浏览器..."
-              loading={loadingFilters.browsers}
-            />
-
-            <MultiSelect
-              label="语言列表"
-              options={languages}
-              selectedValues={formData.filter_langs}
-              onChange={(values) => handleMultiSelectChange('filter_langs', values)}
-              placeholder="选择语言..."
-              loading={loadingFilters.languages}
-            />
-
-            <MultiSelect
-              label="时区列表"
-              options={timezones}
-              selectedValues={formData.filter_time_zones}
-              onChange={(values) => handleMultiSelectChange('filter_time_zones', values)}
-              placeholder="选择时区..."
-              loading={loadingFilters.timezones}
-            />
-
-            <MultiSelect
-              label="连接类型列表"
-              options={connections}
-              selectedValues={formData.filter_connections}
-              onChange={(values) => handleMultiSelectChange('filter_connections', values)}
-              placeholder="选择连接类型..."
-              loading={loadingFilters.connections}
-            />
-          </div>
-
-          {/* Filter Mode Settings */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                国家过滤模式
-              </label>
-              <select
-                name="mode_list_country"
-                value={formData.mode_list_country}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value={1}>允许</option>
-                <option value={0}>阻止</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                设备过滤模式
-              </label>
-              <select
-                name="mode_list_device"
-                value={formData.mode_list_device}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value={1}>允许</option>
-                <option value={0}>阻止</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                操作系统过滤模式
-              </label>
-              <select
-                name="mode_list_os"
-                value={formData.mode_list_os}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value={1}>允许</option>
-                <option value={0}>阻止</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                浏览器过滤模式
-              </label>
-              <select
-                name="mode_list_browser"
-                value={formData.mode_list_browser}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value={1}>允许</option>
-                <option value={0}>阻止</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Filter Flags */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                name="filter_cloaking_flag"
-                checked={formData.filter_cloaking_flag === 1}
-                onChange={handleInputChange}
-                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <span className="text-sm text-gray-700">机器人过滤</span>
-            </label>
-
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                name="filter_vpn_proxy_flag"
-                checked={formData.filter_vpn_proxy_flag === 1}
-                onChange={handleInputChange}
-                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <span className="text-sm text-gray-700">VPN/代理过滤</span>
-            </label>
-
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                name="filter_ip_v6_flag"
-                checked={formData.filter_ip_v6_flag === 1}
-                onChange={handleInputChange}
-                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <span className="text-sm text-gray-700">IPv6过滤</span>
-            </label>
-
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                name="filter_referer_flag"
-                checked={formData.filter_referer_flag === 1}
-                onChange={handleInputChange}
-                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <span className="text-sm text-gray-700">来源过滤</span>
-            </label>
-
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                name="filter_isp_flag"
-                checked={formData.filter_isp_flag === 1}
-                onChange={handleInputChange}
-                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <span className="text-sm text-gray-700">ISP过滤</span>
-            </label>
-
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                name="filter_black_ip_flag"
-                checked={formData.filter_black_ip_flag === 1}
-                onChange={handleInputChange}
-                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <span className="text-sm text-gray-700">IP黑名单过滤</span>
-            </label>
-          </div>
-
-          {/* Numeric Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                每IP每日最大点击数
-              </label>
-              <input
-                type="number"
-                name="filter_ip_clicks_per_day"
-                value={formData.filter_ip_clicks_per_day}
-                onChange={handleInputChange}
-                min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                过滤前点击数
-              </label>
-              <input
-                type="number"
-                name="filter_clicks_before_filtering"
-                value={formData.filter_clicks_before_filtering}
-                onChange={handleInputChange}
-                min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              />
             </div>
           </div>
         </div>
