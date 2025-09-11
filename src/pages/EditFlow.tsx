@@ -502,13 +502,13 @@ const EditFlow: React.FC = () => {
                 白页面URL *
               </label>
               <input
-                type="url"
+                type="text"
                 name="url_white_page"
                 value={formData.url_white_page}
                 onChange={handleInputChange}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="https://example.com"
+                placeholder="输入白页面地址或路径"
               />
             </div>
 
@@ -517,13 +517,13 @@ const EditFlow: React.FC = () => {
                 落地页URL *
               </label>
               <input
-                type="url"
+                type="text"
                 name="url_offer_page"
                 value={formData.url_offer_page}
                 onChange={handleInputChange}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="https://offer.com"
+                placeholder="输入落地页地址或路径"
               />
             </div>
 
