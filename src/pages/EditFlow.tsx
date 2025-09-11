@@ -572,48 +572,48 @@ const EditFlow: React.FC = () => {
           <div className="space-y-4 mb-8">
             <h4 className="text-md font-medium text-gray-800 mb-4">过滤开关</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {console.log('🔍 Passing filter_cloaking_flag to ToggleSwitch:', formData.filter_cloaking_flag)}
               <ToggleSwitch
                 label="机器人过滤"
                 description="过滤机器人和爬虫访问"
                 checked={formData.filter_cloaking_flag === 1}
                 onChange={(checked) => setFormData(prev => ({ ...prev, filter_cloaking_flag: checked ? 1 : 0 }))}
               />
-              {console.log('🔍 Passing filter_vpn_proxy_flag to ToggleSwitch:', formData.filter_vpn_proxy_flag)}
+              {console.log('🔍 Passing filter_cloaking_flag to ToggleSwitch:', formData.filter_cloaking_flag)}
               <ToggleSwitch
                 label="VPN/代理过滤"
                 description="过滤VPN和代理服务器访问"
                 checked={formData.filter_vpn_proxy_flag === 1}
                 onChange={(checked) => setFormData(prev => ({ ...prev, filter_vpn_proxy_flag: checked ? 1 : 0 }))}
               />
-              {console.log('🔍 Passing filter_ip_v6_flag to ToggleSwitch:', formData.filter_ip_v6_flag)}
+              {console.log('🔍 Passing filter_vpn_proxy_flag to ToggleSwitch:', formData.filter_vpn_proxy_flag)}
               <ToggleSwitch
                 label="IPv6过滤"
                 description="过滤IPv6地址访问"
                 checked={formData.filter_ip_v6_flag === 1}
                 onChange={(checked) => setFormData(prev => ({ ...prev, filter_ip_v6_flag: checked ? 1 : 0 }))}
               />
-              {console.log('🔍 Passing filter_referer_flag to ToggleSwitch:', formData.filter_referer_flag)}
+              {console.log('🔍 Passing filter_ip_v6_flag to ToggleSwitch:', formData.filter_ip_v6_flag)}
               <ToggleSwitch
                 label="来源过滤"
                 description="过滤无效的来源页面"
                 checked={formData.filter_referer_flag === 1}
                 onChange={(checked) => setFormData(prev => ({ ...prev, filter_referer_flag: checked ? 1 : 0 }))}
               />
-              {console.log('🔍 Passing filter_isp_flag to ToggleSwitch:', formData.filter_isp_flag)}
+              {console.log('🔍 Passing filter_referer_flag to ToggleSwitch:', formData.filter_referer_flag)}
               <ToggleSwitch
                 label="ISP过滤"
                 description="过滤特定ISP提供商"
                 checked={formData.filter_isp_flag === 1}
                 onChange={(checked) => setFormData(prev => ({ ...prev, filter_isp_flag: checked ? 1 : 0 }))}
               />
-              {console.log('🔍 Passing filter_black_ip_flag to ToggleSwitch:', formData.filter_black_ip_flag)}
+              {console.log('🔍 Passing filter_isp_flag to ToggleSwitch:', formData.filter_isp_flag)}
               <ToggleSwitch
                 label="IP黑名单过滤"
                 description="过滤黑名单IP地址"
                 checked={formData.filter_black_ip_flag === 1}
                 onChange={(checked) => setFormData(prev => ({ ...prev, filter_black_ip_flag: checked ? 1 : 0 }))}
               />
+              {console.log('🔍 Passing filter_black_ip_flag to ToggleSwitch:', formData.filter_black_ip_flag)}
             </div>
           </div>
 
@@ -621,8 +621,6 @@ const EditFlow: React.FC = () => {
           <div className="mb-8">
             <h4 className="text-md font-medium text-gray-800 mb-4">必填过滤列表</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {console.log('🔍 Passing filter_countries to MultiSelect:', formData.filter_countries)}
-              {console.log('🔍 Countries options available:', countries.length)}
               <EnhancedMultiSelect
                 label="国家列表"
                 options={countries}
@@ -632,9 +630,9 @@ const EditFlow: React.FC = () => {
                 loading={loadingFilters.countries}
                 required={true}
               />
+              {console.log('🔍 Passing filter_countries to MultiSelect:', formData.filter_countries)}
+              {console.log('🔍 Countries options available:', countries.length)}
 
-              {console.log('🔍 Passing filter_devices to MultiSelect:', formData.filter_devices)}
-              {console.log('🔍 Devices options available:', devices.length)}
               <EnhancedMultiSelect
                 label="设备列表"
                 options={devices}
@@ -644,9 +642,9 @@ const EditFlow: React.FC = () => {
                 loading={loadingFilters.devices}
                 required={true}
               />
+              {console.log('🔍 Passing filter_devices to MultiSelect:', formData.filter_devices)}
+              {console.log('🔍 Devices options available:', devices.length)}
 
-              {console.log('🔍 Passing filter_os to MultiSelect:', formData.filter_os)}
-              {console.log('🔍 OS options available:', operatingSystems.length)}
               <EnhancedMultiSelect
                 label="操作系统列表"
                 options={operatingSystems}
@@ -656,9 +654,9 @@ const EditFlow: React.FC = () => {
                 loading={loadingFilters.os}
                 required={true}
               />
+              {console.log('🔍 Passing filter_os to MultiSelect:', formData.filter_os)}
+              {console.log('🔍 OS options available:', operatingSystems.length)}
 
-              {console.log('🔍 Passing filter_browsers to MultiSelect:', formData.filter_browsers)}
-              {console.log('🔍 Browsers options available:', browsers.length)}
               <EnhancedMultiSelect
                 label="浏览器列表"
                 options={browsers}
@@ -668,6 +666,8 @@ const EditFlow: React.FC = () => {
                 loading={loadingFilters.browsers}
                 required={true}
               />
+              {console.log('🔍 Passing filter_browsers to MultiSelect:', formData.filter_browsers)}
+              {console.log('🔍 Browsers options available:', browsers.length)}
             </div>
           </div>
 
@@ -675,8 +675,6 @@ const EditFlow: React.FC = () => {
           <div className="mb-8">
             <h4 className="text-md font-medium text-gray-800 mb-4">可选过滤列表</h4>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {console.log('🔍 Passing filter_langs to MultiSelect:', formData.filter_langs)}
-              {console.log('🔍 Languages options available:', languages.length)}
               <EnhancedMultiSelect
                 label="语言列表"
                 options={languages}
@@ -686,9 +684,9 @@ const EditFlow: React.FC = () => {
                 loading={loadingFilters.languages}
                 required={false}
               />
+              {console.log('🔍 Passing filter_langs to MultiSelect:', formData.filter_langs)}
+              {console.log('🔍 Languages options available:', languages.length)}
 
-              {console.log('🔍 Passing filter_time_zones to MultiSelect:', formData.filter_time_zones)}
-              {console.log('🔍 Timezones options available:', timezones.length)}
               <EnhancedMultiSelect
                 label="时区列表"
                 options={timezones}
@@ -698,9 +696,9 @@ const EditFlow: React.FC = () => {
                 loading={loadingFilters.timezones}
                 required={false}
               />
+              {console.log('🔍 Passing filter_time_zones to MultiSelect:', formData.filter_time_zones)}
+              {console.log('🔍 Timezones options available:', timezones.length)}
 
-              {console.log('🔍 Passing filter_connections to MultiSelect:', formData.filter_connections)}
-              {console.log('🔍 Connections options available:', connections.length)}
               <EnhancedMultiSelect
                 label="连接类型列表"
                 options={connections}
@@ -710,6 +708,8 @@ const EditFlow: React.FC = () => {
                 loading={loadingFilters.connections}
                 required={false}
               />
+              {console.log('🔍 Passing filter_connections to MultiSelect:', formData.filter_connections)}
+              {console.log('🔍 Connections options available:', connections.length)}
             </div>
           </div>
 
