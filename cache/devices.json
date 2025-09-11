@@ -1,0 +1,22 @@
+{
+  "data": [
+    {
+      "device_id": 1,
+      "name": "Mobile Phones"
+    },
+    {
+      "device_id": 2,
+      "name": "Tablets"
+    },
+    {
+      "device_id": 3,
+      "name": "Desktop"
+    },
+    {
+      "device_id": 4,
+      "name": "Phablet"
+    }
+  ],
+  "timestamp": 1757126332138,
+  "key": "devices"
+}

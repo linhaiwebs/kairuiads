@@ -1,0 +1,22 @@
+{
+  "data": [
+    {
+      "connection_id": 1,
+      "name": "Satellite Connection"
+    },
+    {
+      "connection_id": 2,
+      "name": "Corporate Network"
+    },
+    {
+      "connection_id": 3,
+      "name": "Cellular Connection"
+    },
+    {
+      "connection_id": 4,
+      "name": "Cable / DSL Connection"
+    }
+  ],
+  "timestamp": 1756212873650,
+  "key": "connection_types"
+}

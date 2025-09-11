@@ -1,0 +1,2106 @@
+{
+  "data": [
+    {
+      "zone_id": 1,
+      "name": "Côte d'Ivoire, Abidjan",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 2,
+      "name": "Ghana, Accra",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 3,
+      "name": "Ethiopia, Addis Ababa",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 4,
+      "name": "Algeria, Algiers",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 5,
+      "name": "Eritrea, Asmara",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 6,
+      "name": "Mali, Bamako",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 7,
+      "name": "Central African Republic, Bangui",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 8,
+      "name": "Gambia, Banjul",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 9,
+      "name": "Guinea-Bissau, Bissau",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 10,
+      "name": "Malawi, Blantyre",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 11,
+      "name": "Republic of the Congo, Brazzaville",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 12,
+      "name": "Burundi, Bujumbura",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 13,
+      "name": "Egypt, Cairo",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 14,
+      "name": "Morocco, Casablanca",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 15,
+      "name": "Spain, Ceuta",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 16,
+      "name": "Guinea, Conakry",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 17,
+      "name": "Senegal, Dakar",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 18,
+      "name": "Tanzania, Dar es Salaam",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 19,
+      "name": "Djibouti, Djibouti",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 20,
+      "name": "Cameroon, Douala",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 21,
+      "name": "Western Sahara, El Aaiun",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 22,
+      "name": "Sierra Leone, Freetown",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 23,
+      "name": "Botswana, Gaborone",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 24,
+      "name": "Zimbabwe, Harare",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 25,
+      "name": "South Africa, Johannesburg",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 26,
+      "name": "South Sudan, Juba",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 27,
+      "name": "Uganda, Kampala",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 28,
+      "name": "Sudan, Khartoum",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 29,
+      "name": "Rwanda, Kigali",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 30,
+      "name": "Democratic Republic of the Congo, Kinshasa",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 31,
+      "name": "Nigeria, Lagos",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 32,
+      "name": "Gabon, Libreville",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 33,
+      "name": "Togo, Lome",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 34,
+      "name": "Angola, Luanda",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 35,
+      "name": "Democratic Republic of the Congo, Lubumbashi",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 36,
+      "name": "Zambia, Lusaka",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 37,
+      "name": "Equatorial Guinea, Malabo",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 38,
+      "name": "Mozambique, Maputo",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 39,
+      "name": "Lesotho, Maseru",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 40,
+      "name": "Eswatini, Mbabane",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 41,
+      "name": "Somalia, Mogadishu",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 42,
+      "name": "Liberia, Monrovia",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 43,
+      "name": "Kenya, Nairobi",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 44,
+      "name": "Chad, Ndjamena",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 45,
+      "name": "Niger, Niamey",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 46,
+      "name": "Mauritania, Nouakchott",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 47,
+      "name": "Burkina Faso, Ouagadougou",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 48,
+      "name": "Benin, Porto-Novo",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 49,
+      "name": "São Tomé and Príncipe, Sao Tome",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 50,
+      "name": "Libya, Tripoli",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 51,
+      "name": "Tunisia, Tunis",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 52,
+      "name": "Namibia, Windhoek",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 53,
+      "name": "United States, Adak",
+      "gmt_offset": "GMT -09:00"
+    },
+    {
+      "zone_id": 54,
+      "name": "United States, Anchorage",
+      "gmt_offset": "GMT -08:00"
+    },
+    {
+      "zone_id": 55,
+      "name": "Anguilla, Anguilla",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 56,
+      "name": "Antigua and Barbuda, Antigua",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 57,
+      "name": "Brazil, Araguaina",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 58,
+      "name": "Argentina, Buenos Aires",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 59,
+      "name": "Argentina, Catamarca",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 60,
+      "name": "Argentina, Cordoba",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 61,
+      "name": "Argentina, Jujuy",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 62,
+      "name": "Argentina, La Rioja",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 63,
+      "name": "Argentina, Mendoza",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 64,
+      "name": "Argentina, Rio Gallegos",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 65,
+      "name": "Argentina, Salta",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 66,
+      "name": "Argentina, San Juan",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 67,
+      "name": "Argentina, San Luis",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 68,
+      "name": "Argentina, Tucuman",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 69,
+      "name": "Argentina, Ushuaia",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 70,
+      "name": "Aruba, Aruba",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 71,
+      "name": "Paraguay, Asuncion",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 72,
+      "name": "Canada, Atikokan",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 73,
+      "name": "Brazil, Bahia",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 74,
+      "name": "Mexico, Bahia Banderas",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 75,
+      "name": "Barbados, Bridgetown",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 76,
+      "name": "Brazil, Belem",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 77,
+      "name": "Belize, Belize City",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 78,
+      "name": "Canada, Blanc-Sablon",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 79,
+      "name": "Brazil, Boa Vista",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 80,
+      "name": "Colombia, Bogota",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 81,
+      "name": "United States, Boise",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 82,
+      "name": "Canada, Cambridge Bay",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 83,
+      "name": "Brazil, Campo Grande",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 84,
+      "name": "Mexico, Cancun",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 85,
+      "name": "Venezuela, Caracas",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 86,
+      "name": "French Guiana, Cayenne",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 87,
+      "name": "Cayman Islands, George Town",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 88,
+      "name": "United States, Chicago",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 89,
+      "name": "Mexico, Chihuahua",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 90,
+      "name": "Costa Rica, San Jose",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 91,
+      "name": "Canada, Creston",
+      "gmt_offset": "GMT -07:00"
+    },
+    {
+      "zone_id": 92,
+      "name": "Brazil, Cuiaba",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 93,
+      "name": "Curaçao, Willemstad",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 94,
+      "name": "Greenland, Danmarkshavn",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 95,
+      "name": "Canada, Dawson",
+      "gmt_offset": "GMT -07:00"
+    },
+    {
+      "zone_id": 96,
+      "name": "Canada, Dawson Creek",
+      "gmt_offset": "GMT -07:00"
+    },
+    {
+      "zone_id": 97,
+      "name": "United States, Denver",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 98,
+      "name": "United States, Detroit",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 99,
+      "name": "Dominica, Roseau",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 100,
+      "name": "Canada, Edmonton",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 101,
+      "name": "Brazil, Eirunepe",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 102,
+      "name": "El Salvador, San Salvador",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 103,
+      "name": "Canada, Fort Nelson",
+      "gmt_offset": "GMT -07:00"
+    },
+    {
+      "zone_id": 104,
+      "name": "Brazil, Fortaleza",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 105,
+      "name": "Canada, Glace Bay",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 106,
+      "name": "Canada, Goose Bay",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 107,
+      "name": "Turks and Caicos Islands, Grand Turk",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 108,
+      "name": "Grenada, St. George's",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 109,
+      "name": "Guadeloupe, Basse-Terre",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 110,
+      "name": "Guatemala, Guatemala City",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 111,
+      "name": "Ecuador, Guayaquil",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 112,
+      "name": "Guyana, Georgetown",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 113,
+      "name": "Canada, Halifax",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 114,
+      "name": "Cuba, Havana",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 115,
+      "name": "Mexico, Hermosillo",
+      "gmt_offset": "GMT -07:00"
+    },
+    {
+      "zone_id": 116,
+      "name": "United States, Indianapolis",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 117,
+      "name": "United States, Knox",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 118,
+      "name": "United States, Marengo",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 119,
+      "name": "United States, Petersburg",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 120,
+      "name": "United States, Tell City",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 121,
+      "name": "United States, Vevay",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 122,
+      "name": "United States, Vincennes",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 123,
+      "name": "United States, Winamac",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 124,
+      "name": "Canada, Inuvik",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 125,
+      "name": "Canada, Iqaluit",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 126,
+      "name": "Jamaica, Kingston",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 127,
+      "name": "United States, Juneau",
+      "gmt_offset": "GMT -08:00"
+    },
+    {
+      "zone_id": 128,
+      "name": "United States, Louisville",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 129,
+      "name": "United States, Monticello",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 130,
+      "name": "Caribbean Netherlands, Kralendijk",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 131,
+      "name": "Bolivia, La Paz",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 132,
+      "name": "Peru, Lima",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 133,
+      "name": "United States, Los Angeles",
+      "gmt_offset": "GMT -07:00"
+    },
+    {
+      "zone_id": 134,
+      "name": "Sint Maarten, Lower Prince's Quarter",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 135,
+      "name": "Brazil, Maceio",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 136,
+      "name": "Nicaragua, Managua",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 137,
+      "name": "Brazil, Manaus",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 138,
+      "name": "Saint Martin, Marigot",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 139,
+      "name": "Martinique, Fort-de-France",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 140,
+      "name": "Mexico, Matamoros",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 141,
+      "name": "Mexico, Mazatlan",
+      "gmt_offset": "GMT -07:00"
+    },
+    {
+      "zone_id": 142,
+      "name": "United States, Menominee",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 143,
+      "name": "Mexico, Merida",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 144,
+      "name": "United States, Metlakatla",
+      "gmt_offset": "GMT -08:00"
+    },
+    {
+      "zone_id": 145,
+      "name": "Mexico, Mexico City",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 146,
+      "name": "Saint Pierre and Miquelon, Miquelon",
+      "gmt_offset": "GMT -02:00"
+    },
+    {
+      "zone_id": 147,
+      "name": "Canada, Moncton",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 148,
+      "name": "Mexico, Monterrey",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 149,
+      "name": "Uruguay, Montevideo",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 150,
+      "name": "Montserrat, Plymouth",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 151,
+      "name": "Bahamas, Nassau",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 152,
+      "name": "United States, New York",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 153,
+      "name": "United States, Nome",
+      "gmt_offset": "GMT -08:00"
+    },
+    {
+      "zone_id": 154,
+      "name": "Brazil, Noronha",
+      "gmt_offset": "GMT -02:00"
+    },
+    {
+      "zone_id": 155,
+      "name": "United States, Beulah",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 156,
+      "name": "United States, Center",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 157,
+      "name": "United States, New Salem",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 158,
+      "name": "Greenland, Nuuk",
+      "gmt_offset": "GMT -02:00"
+    },
+    {
+      "zone_id": 159,
+      "name": "Mexico, Ojinaga",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 160,
+      "name": "Panama, Panama City",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 161,
+      "name": "Canada, Pangnirtung",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 162,
+      "name": "Suriname, Paramaribo",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 163,
+      "name": "United States, Phoenix",
+      "gmt_offset": "GMT -07:00"
+    },
+    {
+      "zone_id": 164,
+      "name": "Haiti, Port-au-Prince",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 165,
+      "name": "Trinidad and Tobago, Port of Spain",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 166,
+      "name": "Brazil, Porto Velho",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 167,
+      "name": "Puerto Rico, San Juan",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 168,
+      "name": "Chile, Punta Arenas",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 169,
+      "name": "Canada, Rankin Inlet",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 170,
+      "name": "Brazil, Recife",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 171,
+      "name": "Canada, Regina",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 172,
+      "name": "Canada, Resolute",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 173,
+      "name": "Brazil, Rio Branco",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 174,
+      "name": "Brazil, Santarem",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 175,
+      "name": "Chile, Santiago",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 176,
+      "name": "Dominican Republic, Santo Domingo",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 177,
+      "name": "Brazil, Sao Paulo",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 178,
+      "name": "Greenland, Scoresbysund",
+      "gmt_offset": "GMT -01:00"
+    },
+    {
+      "zone_id": 179,
+      "name": "United States, Sitka",
+      "gmt_offset": "GMT -08:00"
+    },
+    {
+      "zone_id": 180,
+      "name": "Saint Barthélemy, Gustavia",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 181,
+      "name": "Canada, St Johns",
+      "gmt_offset": "GMT -02:30"
+    },
+    {
+      "zone_id": 182,
+      "name": "Saint Kitts and Nevis, Basseterre",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 183,
+      "name": "Saint Lucia, Castries",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 184,
+      "name": "United States Virgin Islands, Charlotte Amalie",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 185,
+      "name": "Saint Vincent and the Grenadines, Kingstown",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 186,
+      "name": "Canada, Swift Current",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 187,
+      "name": "Honduras, Tegucigalpa",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 188,
+      "name": "Greenland, Thule",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 189,
+      "name": "Mexico, Tijuana",
+      "gmt_offset": "GMT -07:00"
+    },
+    {
+      "zone_id": 190,
+      "name": "Canada, Toronto",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 191,
+      "name": "British Virgin Islands, Road Town",
+      "gmt_offset": "GMT -04:00"
+    },
+    {
+      "zone_id": 192,
+      "name": "Canada, Vancouver",
+      "gmt_offset": "GMT -07:00"
+    },
+    {
+      "zone_id": 193,
+      "name": "Canada, Whitehorse",
+      "gmt_offset": "GMT -07:00"
+    },
+    {
+      "zone_id": 194,
+      "name": "Canada, Winnipeg",
+      "gmt_offset": "GMT -05:00"
+    },
+    {
+      "zone_id": 195,
+      "name": "United States, Yakutat",
+      "gmt_offset": "GMT -08:00"
+    },
+    {
+      "zone_id": 196,
+      "name": "Canada, Yellowknife",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 197,
+      "name": "Antarctica, Casey",
+      "gmt_offset": "GMT +08:00"
+    },
+    {
+      "zone_id": 198,
+      "name": "Antarctica, Davis",
+      "gmt_offset": "GMT +07:00"
+    },
+    {
+      "zone_id": 199,
+      "name": "Antarctica, DumontDUrville",
+      "gmt_offset": "GMT +10:00"
+    },
+    {
+      "zone_id": 200,
+      "name": "Australia, Macquarie",
+      "gmt_offset": "GMT +11:00"
+    },
+    {
+      "zone_id": 201,
+      "name": "Antarctica, Mawson",
+      "gmt_offset": "GMT +05:00"
+    },
+    {
+      "zone_id": 202,
+      "name": "Antarctica, McMurdo",
+      "gmt_offset": "GMT +12:00"
+    },
+    {
+      "zone_id": 203,
+      "name": "Antarctica, Palmer",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 204,
+      "name": "Antarctica, Rothera",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 205,
+      "name": "Antarctica, Syowa",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 206,
+      "name": "Antarctica, Troll",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 207,
+      "name": "Antarctica, Vostok",
+      "gmt_offset": "GMT +06:00"
+    },
+    {
+      "zone_id": 208,
+      "name": "Norway, Longyearbyen",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 209,
+      "name": "Yemen, Aden",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 210,
+      "name": "Kazakhstan, Almaty",
+      "gmt_offset": "GMT +06:00"
+    },
+    {
+      "zone_id": 211,
+      "name": "Jordan, Amman",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 212,
+      "name": "Russia, Anadyr",
+      "gmt_offset": "GMT +12:00"
+    },
+    {
+      "zone_id": 213,
+      "name": "Kazakhstan, Aqtau",
+      "gmt_offset": "GMT +05:00"
+    },
+    {
+      "zone_id": 214,
+      "name": "Kazakhstan, Aqtobe",
+      "gmt_offset": "GMT +05:00"
+    },
+    {
+      "zone_id": 215,
+      "name": "Turkmenistan, Ashgabat",
+      "gmt_offset": "GMT +05:00"
+    },
+    {
+      "zone_id": 216,
+      "name": "Kazakhstan, Atyrau",
+      "gmt_offset": "GMT +05:00"
+    },
+    {
+      "zone_id": 217,
+      "name": "Iraq, Baghdad",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 218,
+      "name": "Bahrain, Manama",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 219,
+      "name": "Azerbaijan, Baku",
+      "gmt_offset": "GMT +04:00"
+    },
+    {
+      "zone_id": 220,
+      "name": "Thailand, Bangkok",
+      "gmt_offset": "GMT +07:00"
+    },
+    {
+      "zone_id": 221,
+      "name": "Russia, Barnaul",
+      "gmt_offset": "GMT +07:00"
+    },
+    {
+      "zone_id": 222,
+      "name": "Lebanon, Beirut",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 223,
+      "name": "Kyrgyzstan, Bishkek",
+      "gmt_offset": "GMT +06:00"
+    },
+    {
+      "zone_id": 224,
+      "name": "Brunei, Bandar Seri Begawan",
+      "gmt_offset": "GMT +08:00"
+    },
+    {
+      "zone_id": 225,
+      "name": "Russia, Chita",
+      "gmt_offset": "GMT +09:00"
+    },
+    {
+      "zone_id": 226,
+      "name": "Mongolia, Choibalsan",
+      "gmt_offset": "GMT +08:00"
+    },
+    {
+      "zone_id": 227,
+      "name": "Sri Lanka, Colombo",
+      "gmt_offset": "GMT +05:30"
+    },
+    {
+      "zone_id": 228,
+      "name": "Syria, Damascus",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 229,
+      "name": "Bangladesh, Dhaka",
+      "gmt_offset": "GMT +06:00"
+    },
+    {
+      "zone_id": 230,
+      "name": "Timor-Leste, Dili",
+      "gmt_offset": "GMT +09:00"
+    },
+    {
+      "zone_id": 231,
+      "name": "United Arab Emirates, Dubai",
+      "gmt_offset": "GMT +04:00"
+    },
+    {
+      "zone_id": 232,
+      "name": "Tajikistan, Dushanbe",
+      "gmt_offset": "GMT +05:00"
+    },
+    {
+      "zone_id": 233,
+      "name": "Cyprus, Famagusta",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 234,
+      "name": "Palestinian Territories, Gaza",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 235,
+      "name": "Palestinian Territories, Hebron",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 236,
+      "name": "Vietnam, Ho Chi Minh",
+      "gmt_offset": "GMT +07:00"
+    },
+    {
+      "zone_id": 237,
+      "name": "Hong Kong, Hong Kong",
+      "gmt_offset": "GMT +08:00"
+    },
+    {
+      "zone_id": 238,
+      "name": "Mongolia, Hovd",
+      "gmt_offset": "GMT +07:00"
+    },
+    {
+      "zone_id": 239,
+      "name": "Russia, Irkutsk",
+      "gmt_offset": "GMT +08:00"
+    },
+    {
+      "zone_id": 240,
+      "name": "Indonesia, Jakarta",
+      "gmt_offset": "GMT +07:00"
+    },
+    {
+      "zone_id": 241,
+      "name": "Indonesia, Jayapura",
+      "gmt_offset": "GMT +09:00"
+    },
+    {
+      "zone_id": 242,
+      "name": "Israel, Jerusalem",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 243,
+      "name": "Afghanistan, Kabul",
+      "gmt_offset": "GMT +04:30"
+    },
+    {
+      "zone_id": 244,
+      "name": "Russia, Kamchatka",
+      "gmt_offset": "GMT +12:00"
+    },
+    {
+      "zone_id": 245,
+      "name": "Pakistan, Karachi",
+      "gmt_offset": "GMT +05:00"
+    },
+    {
+      "zone_id": 246,
+      "name": "Nepal, Kathmandu",
+      "gmt_offset": "GMT +05:45"
+    },
+    {
+      "zone_id": 247,
+      "name": "Russia, Khandyga",
+      "gmt_offset": "GMT +09:00"
+    },
+    {
+      "zone_id": 248,
+      "name": "India, Kolkata",
+      "gmt_offset": "GMT +05:30"
+    },
+    {
+      "zone_id": 249,
+      "name": "Russia, Krasnoyarsk",
+      "gmt_offset": "GMT +07:00"
+    },
+    {
+      "zone_id": 250,
+      "name": "Malaysia, Kuala Lumpur",
+      "gmt_offset": "GMT +08:00"
+    },
+    {
+      "zone_id": 251,
+      "name": "Malaysia, Kuching",
+      "gmt_offset": "GMT +08:00"
+    },
+    {
+      "zone_id": 252,
+      "name": "Kuwait, Kuwait City",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 253,
+      "name": "Macau, Macau",
+      "gmt_offset": "GMT +08:00"
+    },
+    {
+      "zone_id": 254,
+      "name": "Russia, Magadan",
+      "gmt_offset": "GMT +11:00"
+    },
+    {
+      "zone_id": 255,
+      "name": "Indonesia, Makassar",
+      "gmt_offset": "GMT +08:00"
+    },
+    {
+      "zone_id": 256,
+      "name": "Philippines, Manila",
+      "gmt_offset": "GMT +08:00"
+    },
+    {
+      "zone_id": 257,
+      "name": "Oman, Muscat",
+      "gmt_offset": "GMT +04:00"
+    },
+    {
+      "zone_id": 258,
+      "name": "Cyprus, Nicosia",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 259,
+      "name": "Russia, Novokuznetsk",
+      "gmt_offset": "GMT +07:00"
+    },
+    {
+      "zone_id": 260,
+      "name": "Russia, Novosibirsk",
+      "gmt_offset": "GMT +07:00"
+    },
+    {
+      "zone_id": 261,
+      "name": "Russia, Omsk",
+      "gmt_offset": "GMT +06:00"
+    },
+    {
+      "zone_id": 262,
+      "name": "Kazakhstan, Oral",
+      "gmt_offset": "GMT +05:00"
+    },
+    {
+      "zone_id": 263,
+      "name": "Cambodia, Phnom Penh",
+      "gmt_offset": "GMT +07:00"
+    },
+    {
+      "zone_id": 264,
+      "name": "Indonesia, Pontianak",
+      "gmt_offset": "GMT +07:00"
+    },
+    {
+      "zone_id": 265,
+      "name": "North Korea, Pyongyang",
+      "gmt_offset": "GMT +09:00"
+    },
+    {
+      "zone_id": 266,
+      "name": "Qatar, Doha",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 267,
+      "name": "Kazakhstan, Qostanay",
+      "gmt_offset": "GMT +06:00"
+    },
+    {
+      "zone_id": 268,
+      "name": "Kazakhstan, Qyzylorda",
+      "gmt_offset": "GMT +05:00"
+    },
+    {
+      "zone_id": 269,
+      "name": "Saudi Arabia, Riyadh",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 270,
+      "name": "Russia, Sakhalin",
+      "gmt_offset": "GMT +11:00"
+    },
+    {
+      "zone_id": 271,
+      "name": "Uzbekistan, Samarkand",
+      "gmt_offset": "GMT +05:00"
+    },
+    {
+      "zone_id": 272,
+      "name": "South Korea, Seoul",
+      "gmt_offset": "GMT +09:00"
+    },
+    {
+      "zone_id": 273,
+      "name": "China, Shanghai",
+      "gmt_offset": "GMT +08:00"
+    },
+    {
+      "zone_id": 274,
+      "name": "Singapore, Singapore",
+      "gmt_offset": "GMT +08:00"
+    },
+    {
+      "zone_id": 275,
+      "name": "Russia, Srednekolymsk",
+      "gmt_offset": "GMT +11:00"
+    },
+    {
+      "zone_id": 276,
+      "name": "Taiwan, Taipei",
+      "gmt_offset": "GMT +08:00"
+    },
+    {
+      "zone_id": 277,
+      "name": "Uzbekistan, Tashkent",
+      "gmt_offset": "GMT +05:00"
+    },
+    {
+      "zone_id": 278,
+      "name": "Georgia, Tbilisi",
+      "gmt_offset": "GMT +04:00"
+    },
+    {
+      "zone_id": 279,
+      "name": "Iran, Tehran",
+      "gmt_offset": "GMT +03:30"
+    },
+    {
+      "zone_id": 280,
+      "name": "Bhutan, Thimphu",
+      "gmt_offset": "GMT +06:00"
+    },
+    {
+      "zone_id": 281,
+      "name": "Japan, Tokyo",
+      "gmt_offset": "GMT +09:00"
+    },
+    {
+      "zone_id": 282,
+      "name": "Russia, Tomsk",
+      "gmt_offset": "GMT +07:00"
+    },
+    {
+      "zone_id": 283,
+      "name": "Mongolia, Ulaanbaatar",
+      "gmt_offset": "GMT +08:00"
+    },
+    {
+      "zone_id": 284,
+      "name": "China, Urumqi",
+      "gmt_offset": "GMT +06:00"
+    },
+    {
+      "zone_id": 285,
+      "name": "Russia, Ust-Nera",
+      "gmt_offset": "GMT +10:00"
+    },
+    {
+      "zone_id": 286,
+      "name": "Laos, Vientiane",
+      "gmt_offset": "GMT +07:00"
+    },
+    {
+      "zone_id": 287,
+      "name": "Russia, Vladivostok",
+      "gmt_offset": "GMT +10:00"
+    },
+    {
+      "zone_id": 288,
+      "name": "Russia, Yakutsk",
+      "gmt_offset": "GMT +09:00"
+    },
+    {
+      "zone_id": 289,
+      "name": "Myanmar, Yangon",
+      "gmt_offset": "GMT +06:30"
+    },
+    {
+      "zone_id": 290,
+      "name": "Russia, Yekaterinburg",
+      "gmt_offset": "GMT +05:00"
+    },
+    {
+      "zone_id": 291,
+      "name": "Armenia, Yerevan",
+      "gmt_offset": "GMT +04:00"
+    },
+    {
+      "zone_id": 292,
+      "name": "Portugal, Azores",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 293,
+      "name": "Bermuda, Hamilton",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 294,
+      "name": "Spain, Canary",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 295,
+      "name": "Cape Verde, Praia",
+      "gmt_offset": "GMT -01:00"
+    },
+    {
+      "zone_id": 296,
+      "name": "Faroe Islands, Tórshavn",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 297,
+      "name": "Portugal, Madeira",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 298,
+      "name": "Iceland, Reykjavik",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 299,
+      "name": "South Georgia and the South Sandwich Islands, Grytviken",
+      "gmt_offset": "GMT -02:00"
+    },
+    {
+      "zone_id": 300,
+      "name": "Saint Helena, Jamestown",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 301,
+      "name": "Falkland Islands, Stanley",
+      "gmt_offset": "GMT -03:00"
+    },
+    {
+      "zone_id": 302,
+      "name": "Australia, Adelaide",
+      "gmt_offset": "GMT +10:30"
+    },
+    {
+      "zone_id": 303,
+      "name": "Australia, Brisbane",
+      "gmt_offset": "GMT +10:00"
+    },
+    {
+      "zone_id": 304,
+      "name": "Australia, Broken Hill",
+      "gmt_offset": "GMT +10:30"
+    },
+    {
+      "zone_id": 305,
+      "name": "Australia, Darwin",
+      "gmt_offset": "GMT +09:30"
+    },
+    {
+      "zone_id": 306,
+      "name": "Australia, Eucla",
+      "gmt_offset": "GMT +08:45"
+    },
+    {
+      "zone_id": 307,
+      "name": "Australia, Hobart",
+      "gmt_offset": "GMT +11:00"
+    },
+    {
+      "zone_id": 308,
+      "name": "Australia, Lindeman",
+      "gmt_offset": "GMT +10:00"
+    },
+    {
+      "zone_id": 309,
+      "name": "Australia, Lord Howe",
+      "gmt_offset": "GMT +11:00"
+    },
+    {
+      "zone_id": 310,
+      "name": "Australia, Melbourne",
+      "gmt_offset": "GMT +11:00"
+    },
+    {
+      "zone_id": 311,
+      "name": "Australia, Perth",
+      "gmt_offset": "GMT +08:00"
+    },
+    {
+      "zone_id": 312,
+      "name": "Australia, Sydney",
+      "gmt_offset": "GMT +11:00"
+    },
+    {
+      "zone_id": 313,
+      "name": "Netherlands, Amsterdam",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 314,
+      "name": "Andorra, Andorra la Vella",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 315,
+      "name": "Russia, Astrakhan",
+      "gmt_offset": "GMT +04:00"
+    },
+    {
+      "zone_id": 316,
+      "name": "Greece, Athens",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 317,
+      "name": "Serbia, Belgrade",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 318,
+      "name": "Germany, Berlin",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 319,
+      "name": "Slovakia, Bratislava",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 320,
+      "name": "Belgium, Brussels",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 321,
+      "name": "Romania, Bucharest",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 322,
+      "name": "Hungary, Budapest",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 323,
+      "name": "Germany, Busingen",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 324,
+      "name": "Moldova, Chisinau",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 325,
+      "name": "Denmark, Copenhagen",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 326,
+      "name": "Ireland, Dublin",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 327,
+      "name": "Gibraltar, Gibraltar",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 328,
+      "name": "Guernsey, St. Peter Port",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 329,
+      "name": "Finland, Helsinki",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 330,
+      "name": "Isle of Man, Douglas",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 331,
+      "name": "Turkey, Istanbul",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 332,
+      "name": "Jersey, St. Helier",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 333,
+      "name": "Russia, Kaliningrad",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 334,
+      "name": "Russia, Kirov",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 335,
+      "name": "Ukraine, Kyiv",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 336,
+      "name": "Portugal, Lisbon",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 337,
+      "name": "Slovenia, Ljubljana",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 338,
+      "name": "United Kingdom, London",
+      "gmt_offset": "GMT +00:00"
+    },
+    {
+      "zone_id": 339,
+      "name": "Luxembourg, Luxembourg",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 340,
+      "name": "Spain, Madrid",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 341,
+      "name": "Malta, Valletta",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 342,
+      "name": "Åland Islands, Mariehamn",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 343,
+      "name": "Belarus, Minsk",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 344,
+      "name": "Monaco, Monaco",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 345,
+      "name": "Russia, Moscow",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 346,
+      "name": "Norway, Oslo",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 347,
+      "name": "France, Paris",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 348,
+      "name": "Montenegro, Podgorica",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 349,
+      "name": "Czech Republic, Prague",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 350,
+      "name": "Latvia, Riga",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 351,
+      "name": "Italy, Rome",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 352,
+      "name": "Russia, Samara",
+      "gmt_offset": "GMT +04:00"
+    },
+    {
+      "zone_id": 353,
+      "name": "San Marino, San Marino",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 354,
+      "name": "Bosnia and Herzegovina, Sarajevo",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 355,
+      "name": "Russia, Saratov",
+      "gmt_offset": "GMT +04:00"
+    },
+    {
+      "zone_id": 356,
+      "name": "Russia, Simferopol",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 357,
+      "name": "North Macedonia, Skopje",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 358,
+      "name": "Bulgaria, Sofia",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 359,
+      "name": "Sweden, Stockholm",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 360,
+      "name": "Estonia, Tallinn",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 361,
+      "name": "Albania, Tirane",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 362,
+      "name": "Russia, Ulyanovsk",
+      "gmt_offset": "GMT +04:00"
+    },
+    {
+      "zone_id": 363,
+      "name": "Liechtenstein, Vaduz",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 364,
+      "name": "Vatican City, Vatican City",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 365,
+      "name": "Austria, Vienna",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 366,
+      "name": "Lithuania, Vilnius",
+      "gmt_offset": "GMT +02:00"
+    },
+    {
+      "zone_id": 367,
+      "name": "Russia, Volgograd",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 368,
+      "name": "Poland, Warsaw",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 369,
+      "name": "Croatia, Zagreb",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 370,
+      "name": "Switzerland, Zurich",
+      "gmt_offset": "GMT +01:00"
+    },
+    {
+      "zone_id": 371,
+      "name": "Madagascar, Antananarivo",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 372,
+      "name": "British Indian Ocean Territory, Diego Garcia",
+      "gmt_offset": "GMT +06:00"
+    },
+    {
+      "zone_id": 373,
+      "name": "Christmas Island, Flying Fish Cove",
+      "gmt_offset": "GMT +07:00"
+    },
+    {
+      "zone_id": 374,
+      "name": "Cocos (Keeling) Islands, West Island",
+      "gmt_offset": "GMT +06:30"
+    },
+    {
+      "zone_id": 375,
+      "name": "Comoros, Moroni",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 376,
+      "name": "French Southern and Antarctic Lands, Port-aux-Français",
+      "gmt_offset": "GMT +05:00"
+    },
+    {
+      "zone_id": 377,
+      "name": "Seychelles, Victoria",
+      "gmt_offset": "GMT +04:00"
+    },
+    {
+      "zone_id": 378,
+      "name": "Maldives, Malé",
+      "gmt_offset": "GMT +05:00"
+    },
+    {
+      "zone_id": 379,
+      "name": "Mauritius, Port Louis",
+      "gmt_offset": "GMT +04:00"
+    },
+    {
+      "zone_id": 380,
+      "name": "Mayotte, Mamoudzou",
+      "gmt_offset": "GMT +03:00"
+    },
+    {
+      "zone_id": 381,
+      "name": "Réunion, Saint-Denis",
+      "gmt_offset": "GMT +04:00"
+    },
+    {
+      "zone_id": 382,
+      "name": "Samoa, Apia",
+      "gmt_offset": "GMT +13:00"
+    },
+    {
+      "zone_id": 383,
+      "name": "New Zealand, Auckland",
+      "gmt_offset": "GMT +12:00"
+    },
+    {
+      "zone_id": 384,
+      "name": "Papua New Guinea, Bougainville",
+      "gmt_offset": "GMT +11:00"
+    },
+    {
+      "zone_id": 385,
+      "name": "New Zealand, Chatham",
+      "gmt_offset": "GMT +12:45"
+    },
+    {
+      "zone_id": 386,
+      "name": "Micronesia, Chuuk",
+      "gmt_offset": "GMT +10:00"
+    },
+    {
+      "zone_id": 387,
+      "name": "Chile, Easter Island",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 388,
+      "name": "Vanuatu, Port Vila",
+      "gmt_offset": "GMT +11:00"
+    },
+    {
+      "zone_id": 389,
+      "name": "Tokelau, Fakaofo",
+      "gmt_offset": "GMT +13:00"
+    },
+    {
+      "zone_id": 390,
+      "name": "Fiji, Suva",
+      "gmt_offset": "GMT +12:00"
+    },
+    {
+      "zone_id": 391,
+      "name": "Tuvalu, Funafuti",
+      "gmt_offset": "GMT +12:00"
+    },
+    {
+      "zone_id": 392,
+      "name": "Ecuador, Galapagos",
+      "gmt_offset": "GMT -06:00"
+    },
+    {
+      "zone_id": 393,
+      "name": "French Polynesia, Gambier",
+      "gmt_offset": "GMT -09:00"
+    },
+    {
+      "zone_id": 394,
+      "name": "Solomon Islands, Honiara",
+      "gmt_offset": "GMT +11:00"
+    },
+    {
+      "zone_id": 395,
+      "name": "Guam, Hagåtña",
+      "gmt_offset": "GMT +10:00"
+    },
+    {
+      "zone_id": 396,
+      "name": "United States, Honolulu",
+      "gmt_offset": "GMT -10:00"
+    },
+    {
+      "zone_id": 397,
+      "name": "Kiribati, Kanton",
+      "gmt_offset": "GMT +13:00"
+    },
+    {
+      "zone_id": 398,
+      "name": "Kiribati, Kiritimati",
+      "gmt_offset": "GMT +14:00"
+    },
+    {
+      "zone_id": 399,
+      "name": "Micronesia, Kosrae",
+      "gmt_offset": "GMT +11:00"
+    },
+    {
+      "zone_id": 400,
+      "name": "Marshall Islands, Kwajalein",
+      "gmt_offset": "GMT +12:00"
+    },
+    {
+      "zone_id": 401,
+      "name": "Marshall Islands, Majuro",
+      "gmt_offset": "GMT +12:00"
+    },
+    {
+      "zone_id": 402,
+      "name": "French Polynesia, Marquesas",
+      "gmt_offset": "GMT -09:30"
+    },
+    {
+      "zone_id": 403,
+      "name": "United States Minor Outlying Islands, Midway",
+      "gmt_offset": "GMT -11:00"
+    },
+    {
+      "zone_id": 404,
+      "name": "Nauru, Yaren",
+      "gmt_offset": "GMT +12:00"
+    },
+    {
+      "zone_id": 405,
+      "name": "Niue, Alofi",
+      "gmt_offset": "GMT -11:00"
+    },
+    {
+      "zone_id": 406,
+      "name": "Norfolk Island, Kingston",
+      "gmt_offset": "GMT +11:00"
+    },
+    {
+      "zone_id": 407,
+      "name": "New Caledonia, Noumea",
+      "gmt_offset": "GMT +11:00"
+    },
+    {
+      "zone_id": 408,
+      "name": "American Samoa, Pago Pago",
+      "gmt_offset": "GMT -11:00"
+    },
+    {
+      "zone_id": 409,
+      "name": "Palau, Ngerulmud",
+      "gmt_offset": "GMT +09:00"
+    },
+    {
+      "zone_id": 410,
+      "name": "Pitcairn Islands, Adamstown",
+      "gmt_offset": "GMT -08:00"
+    },
+    {
+      "zone_id": 411,
+      "name": "Micronesia, Pohnpei",
+      "gmt_offset": "GMT +11:00"
+    },
+    {
+      "zone_id": 412,
+      "name": "Papua New Guinea, Port Moresby",
+      "gmt_offset": "GMT +10:00"
+    },
+    {
+      "zone_id": 413,
+      "name": "Cook Islands, Avarua",
+      "gmt_offset": "GMT -10:00"
+    },
+    {
+      "zone_id": 414,
+      "name": "Northern Mariana Islands, Saipan",
+      "gmt_offset": "GMT +10:00"
+    },
+    {
+      "zone_id": 415,
+      "name": "French Polynesia, Papeete",
+      "gmt_offset": "GMT -10:00"
+    },
+    {
+      "zone_id": 416,
+      "name": "Kiribati, Tarawa",
+      "gmt_offset": "GMT +12:00"
+    },
+    {
+      "zone_id": 417,
+      "name": "Tonga, Nukuʻalofa",
+      "gmt_offset": "GMT +13:00"
+    },
+    {
+      "zone_id": 418,
+      "name": "United States Minor Outlying Islands, Wake",
+      "gmt_offset": "GMT +12:00"
+    },
+    {
+      "zone_id": 419,
+      "name": "Wallis and Futuna, Mata-Utu",
+      "gmt_offset": "GMT +12:00"
+    },
+    {
+      "zone_id": 420,
+      "name": "Universal, UTC",
+      "gmt_offset": "GMT +00:00"
+    }
+  ],
+  "timestamp": 1756212873240,
+  "key": "time_zones"
+}
