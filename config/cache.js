@@ -1,9 +1,3 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // 缓存配置
 const CACHE_CONFIG = {
@@ -17,48 +11,12 @@ const CACHE_CONFIG = {
     time_zones: 30 * 24 * 60 * 60 * 1000, // 30天
     connection_types: 30 * 24 * 60 * 60 * 1000 // 30天
   },
-  // 缓存文件路径
-  CACHE_DIR: path.join(__dirname, '../cache'),
   // 自动刷新间隔（毫秒）
   AUTO_REFRESH_INTERVAL: 60 * 60 * 1000 // 1小时检查一次
 };
 
-// 确保缓存目录存在
-if (!fs.existsSync(CACHE_CONFIG.CACHE_DIR)) {
-  fs.mkdirSync(CACHE_CONFIG.CACHE_DIR, { recursive: true });
-}
-
 // 内存缓存
 const memoryCache = new Map();
-
-// 获取缓存文件路径
-const getCacheFilePath = (key) => {
-  return path.join(CACHE_CONFIG.CACHE_DIR, `${key}.json`);
-};
-
-// 从文件读取缓存
-const readCacheFromFile = (key) => {
-  try {
-    const filePath = getCacheFilePath(key);
-    if (fs.existsSync(filePath)) {
-      const data = fs.readFileSync(filePath, 'utf8');
-      return JSON.parse(data);
-    }
-  } catch (error) {
-    console.error(`Error reading cache file for ${key}:`, error);
-  }
-  return null;
-};
-
-// 写入缓存到文件
-const writeCacheToFile = (key, data) => {
-  try {
-    const filePath = getCacheFilePath(key);
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-  } catch (error) {
-    console.error(`Error writing cache file for ${key}:`, error);
-  }
-};
 
 // 检查缓存是否过期
 const isCacheExpired = (cacheData, key) => {
@@ -73,7 +31,7 @@ const isCacheExpired = (cacheData, key) => {
 
 // 获取缓存数据
 export const getCache = (key) => {
-  // 先检查内存缓存
+  // 检查内存缓存
   if (memoryCache.has(key)) {
     const cacheData = memoryCache.get(key);
     if (!isCacheExpired(cacheData, key)) {
@@ -82,15 +40,6 @@ export const getCache = (key) => {
     } else {
       memoryCache.delete(key);
     }
-  }
-  
-  // 检查文件缓存
-  const fileCacheData = readCacheFromFile(key);
-  if (fileCacheData && !isCacheExpired(fileCacheData, key)) {
-    console.log(`📋 Cache hit (file): ${key}`);
-    // 同时更新内存缓存
-    memoryCache.set(key, fileCacheData);
-    return fileCacheData.data;
   }
   
   console.log(`📋 Cache miss: ${key}`);
@@ -108,45 +57,18 @@ export const setCache = (key, data) => {
   // 更新内存缓存
   memoryCache.set(key, cacheData);
   
-  // 更新文件缓存
-  writeCacheToFile(key, cacheData);
-  
   console.log(`📋 Cache updated: ${key}`);
 };
 
 // 清除指定缓存
 export const clearCache = (key) => {
   memoryCache.delete(key);
-  
-  try {
-    const filePath = getCacheFilePath(key);
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
-  } catch (error) {
-    console.error(`Error clearing cache file for ${key}:`, error);
-  }
-  
   console.log(`📋 Cache cleared: ${key}`);
 };
 
 // 清除所有缓存
 export const clearAllCache = () => {
   memoryCache.clear();
-  
-  try {
-    if (fs.existsSync(CACHE_CONFIG.CACHE_DIR)) {
-      const files = fs.readdirSync(CACHE_CONFIG.CACHE_DIR);
-      files.forEach(file => {
-        if (file.endsWith('.json')) {
-          fs.unlinkSync(path.join(CACHE_CONFIG.CACHE_DIR, file));
-        }
-      });
-    }
-  } catch (error) {
-    console.error('Error clearing all cache files:', error);
-  }
-  
   console.log('📋 All cache cleared');
 };
 
@@ -161,15 +83,6 @@ export const getCacheStats = () => {
       files: []
     }
   };
-  
-  try {
-    if (fs.existsSync(CACHE_CONFIG.CACHE_DIR)) {
-      const files = fs.readdirSync(CACHE_CONFIG.CACHE_DIR);
-      stats.fileCache.files = files.filter(file => file.endsWith('.json'));
-    }
-  } catch (error) {
-    console.error('Error reading cache directory:', error);
-  }
   
   return stats;
 };

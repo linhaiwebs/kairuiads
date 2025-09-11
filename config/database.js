@@ -1,50 +1,19 @@
 import sqlite3 from 'sqlite3';
-import path from 'path';
-import fs from 'fs';
 import bcrypt from 'bcryptjs';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const sqlite3Verbose = sqlite3.verbose();
 
-// 在WebContainer环境中强制使用内存数据库
-const isWebContainer = process.env.NODE_ENV === 'development' || !process.env.DB_PATH;
-const dbPath = isWebContainer ? ':memory:' : (process.env.DB_PATH || path.join(process.cwd(), 'database', 'flows.db'));
-const dbDir = path.dirname(dbPath);
-
 let db;
 
-// 创建数据库连接
-const createDatabaseConnection = () => {
-  return new Promise((resolve, reject) => {
-    console.log('✅ 使用内存数据库（WebContainer环境）');
-    const memoryDb = new sqlite3Verbose.Database(':memory:', (err) => {
-      if (err) {
-        console.error('❌ 无法创建内存数据库:', err);
-        reject(err);
-      } else {
-        console.log('✅ 内存数据库连接成功');
-        resolve(memoryDb);
-      }
-    });
-  });
-};
-
-// 初始化数据库连接
-try {
-  db = await createDatabaseConnection();
-  
-  // Configure database for better performance and reliability
-  if (db) {
-    db.configure('busyTimeout', 30000); // 30 second timeout
-    console.log('✅ 数据库配置完成');
+// 使用内存数据库
+console.log('✅ 使用内存数据库');
+db = new sqlite3Verbose.Database(':memory:', (err) => {
+  if (err) {
+    console.error('❌ 无法创建内存数据库:', err);
+  } else {
+    console.log('✅ 内存数据库连接成功');
   }
-} catch (err) {
-  console.error('❌ 数据库连接失败:', err);
-  process.exit(1);
-}
+});
 
 const initializeDatabase = async () => {
   return new Promise((resolve, reject) => {

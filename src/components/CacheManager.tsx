@@ -164,23 +164,14 @@ const CacheManager: React.FC = () => {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-2">
                 <HardDrive className="h-5 w-5 text-blue-500" />
-                <h4 className="font-medium text-gray-900">文件缓存</h4>
+                <h4 className="font-medium text-gray-900">文件缓存 (已禁用)</h4>
               </div>
               <span className="text-sm text-gray-500">
-                {cacheStats.fileCache.files.length} 文件
+                0 文件
               </span>
             </div>
             <div className="space-y-2">
-              {cacheStats.fileCache.files.length > 0 ? (
-                cacheStats.fileCache.files.map((file, index) => (
-                  <div key={index} className="flex items-center justify-between py-1">
-                    <span className="text-sm text-gray-700">{file.replace('.json', '')}</span>
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm text-gray-500">暂无缓存文件</p>
-              )}
+              <p className="text-sm text-gray-500">文件缓存已禁用，仅使用内存缓存</p>
             </div>
           </div>
         </div>
@@ -194,7 +185,7 @@ const CacheManager: React.FC = () => {
             <h4 className="font-medium text-blue-900 mb-2">缓存机制说明</h4>
             <ul className="text-sm text-blue-800 space-y-1">
               <li>• <strong>内存缓存</strong>：快速访问，重启后清空</li>
-              <li>• <strong>文件缓存</strong>：持久存储，重启后保留</li>
+              <li>• <strong>文件缓存</strong>：已禁用，简化部署</li>
               <li>• <strong>自动刷新</strong>：系统会自动更新即将过期的缓存</li>
               <li>• <strong>过期时间</strong>：国家(24h)、设备/浏览器(7天)、语言/时区(30天)</li>
             </ul>

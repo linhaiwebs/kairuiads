@@ -10,21 +10,16 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
-console.log('🚀 Starting Kairui Flow Management Server...');
-console.log('📋 Environment:', process.env.NODE_ENV || 'development');
-console.log('📋 Port:', process.env.PORT || 3001);
+console.log('🚀 启动恺瑞投流管理系统...');
 
 // Set JWT secret if not provided
 if (!process.env.JWT_SECRET) {
   process.env.JWT_SECRET = 'your-secret-key-here-change-in-production';
-  console.log('Using default JWT_SECRET');
 }
 
 // Check API key configuration
 if (!process.env.API_KEY && !process.env.CLOAKING_API_KEY) {
   console.warn('⚠️  WARNING: API_KEY or CLOAKING_API_KEY not found in environment variables');
-  console.warn('⚠️  Please set API_KEY=your_api_key_here in your .env file');
-  console.warn('⚠️  Filter data endpoints will not work without a valid API key');
 }
 
 try {
@@ -40,28 +35,12 @@ try {
   const app = express();
   const PORT = process.env.PORT || 3001;
 
-  // Production optimizations
-  if (process.env.NODE_ENV === 'production') {
-    // Trust proxy for proper IP forwarding
-    app.set('trust proxy', 1);
-    
-    // Security headers
-    app.use((req, res, next) => {
-      res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-      res.setHeader('X-XSS-Protection', '1; mode=block');
-      res.setHeader('X-Content-Type-Options', 'nosniff');
-      next();
-    });
-  }
-
-  console.log('Initializing database...');
   // Initialize database
   try {
     await initializeDatabase();
     console.log('✅ Database initialized successfully');
   } catch (dbError) {
-    console.warn('⚠️  数据库初始化警告:', dbError.message);
-    console.log('✅ 继续启动服务器（使用内存数据库）...');
+    console.warn('⚠️ 数据库初始化警告:', dbError.message);
   }
 
   // Middleware
@@ -79,21 +58,6 @@ try {
   app.use('/api', conversionsRoutes.default);
   app.use('/api', apiLogsRoutes.default);
 
-  // Debug: Log all registered routes
-  console.log('📋 Registered API routes:');
-  app._router.stack.forEach((middleware) => {
-    if (middleware.route) {
-      console.log(`  ${Object.keys(middleware.route.methods).join(', ').toUpperCase()} ${middleware.route.path}`);
-    } else if (middleware.name === 'router') {
-      middleware.handle.stack.forEach((handler) => {
-        if (handler.route) {
-          const basePath = middleware.regexp.source.replace('\\/?(?=\\/|$)', '').replace('^', '');
-          console.log(`  ${Object.keys(handler.route.methods).join(', ').toUpperCase()} ${basePath}${handler.route.path}`);
-        }
-      });
-    }
-  });
-
   // Catch-all route handler
   app.get('*', (req, res) => {
     // If it's an API request that wasn't handled by previous routes, return 404
@@ -107,7 +71,6 @@ try {
 
   app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
-    console.log(`✅ Admin dashboard: http://localhost:${PORT}/admin`);
   });
 
 } catch (error) {
