@@ -56,11 +56,11 @@ try {
   // Initialize database
   try {
     await initializeDatabase();
+    console.log('✅ Database initialized successfully');
   } catch (dbError) {
     console.warn('⚠️  数据库初始化警告:', dbError.message);
-    console.log('✅ 继续启动服务器...');
+    console.log('✅ 继续启动服务器（使用内存数据库）...');
   }
-  console.log('Database initialized');
 
   // Middleware
   app.use(cors());
