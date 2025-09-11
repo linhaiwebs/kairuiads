@@ -40,7 +40,9 @@ try {
     await initializeDatabase();
     console.log('✅ Database initialized successfully');
   } catch (dbError) {
-    console.warn('⚠️ 数据库初始化警告:', dbError.message);
+    console.error('❌ 数据库初始化失败:', dbError.message);
+    console.error('请确保MySQL/MariaDB服务器正在运行，并且.env文件中的数据库配置正确');
+    process.exit(1);
   }
 
   // Middleware

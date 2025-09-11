@@ -46,8 +46,8 @@ npm run build
 # MySQL/MariaDB 数据库配置
 DB_HOST=localhost
 DB_PORT=3306
-DB_USER=your_mysql_username
-DB_PASSWORD=your_mysql_password
+DB_USER=flow_user
+DB_PASSWORD=your_secure_password
 DB_NAME=flow_management_db
 
 # JWT密钥
