@@ -51,7 +51,7 @@ const EditFlow: React.FC = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Filter options state
+  // Filter options state - 与CreateFlow完全一致
   const [countries, setCountries] = useState<FilterOption[]>([]);
   const [devices, setDevices] = useState<FilterOption[]>([]);
   const [operatingSystems, setOperatingSystems] = useState<FilterOption[]>([]);
@@ -60,7 +60,7 @@ const EditFlow: React.FC = () => {
   const [timezones, setTimezones] = useState<FilterOption[]>([]);
   const [connections, setConnections] = useState<FilterOption[]>([]);
 
-  // Loading states
+  // Loading states - 与CreateFlow完全一致
   const [loadingFilters, setLoadingFilters] = useState({
     countries: false,
     devices: false,
@@ -109,6 +109,157 @@ const EditFlow: React.FC = () => {
     loadFlow();
   }, [id]);
 
+  // 与CreateFlow完全相同的数据加载逻辑
+  const loadFilterData = async () => {
+    // Load countries
+    setLoadingFilters(prev => ({ ...prev, countries: true }));
+    try {
+      console.log('Loading countries...');
+      const countriesResponse = await apiService.getCountries();
+      console.log('Countries API response:', countriesResponse);
+      if (countriesResponse.success) {
+        const formattedCountries = countriesResponse.data.map(item => ({
+          id: item.country_id || item.id,
+          name: item.name
+        }));
+        setCountries(formattedCountries);
+        console.log('Countries loaded:', countriesResponse.data.length, 'items');
+      } else {
+        console.error('Countries API error:', countriesResponse.message);
+      }
+    } catch (error) {
+      console.error('Error loading countries:', error.message);
+    } finally {
+      setLoadingFilters(prev => ({ ...prev, countries: false }));
+    }
+
+    // Load devices
+    setLoadingFilters(prev => ({ ...prev, devices: true }));
+    try {
+      console.log('Loading devices...');
+      const devicesResponse = await apiService.getDevices();
+      console.log('Devices response:', devicesResponse);
+      if (devicesResponse.success) {
+        const formattedDevices = devicesResponse.data.map(item => ({
+          id: item.device_id || item.id,
+          name: item.name
+        }));
+        setDevices(formattedDevices);
+      } else {
+        console.error('Devices API error:', devicesResponse.message);
+      }
+    } catch (error) {
+      console.error('Error loading devices:', error);
+    } finally {
+      setLoadingFilters(prev => ({ ...prev, devices: false }));
+    }
+
+    // Load operating systems
+    setLoadingFilters(prev => ({ ...prev, os: true }));
+    try {
+      console.log('Loading OS...');
+      const osResponse = await apiService.getOperatingSystems();
+      console.log('OS response:', osResponse);
+      if (osResponse.success) {
+        const formattedOS = osResponse.data.map(item => ({
+          id: item.os_id || item.id,
+          name: item.name
+        }));
+        setOperatingSystems(formattedOS);
+      } else {
+        console.error('OS API error:', osResponse.message);
+      }
+    } catch (error) {
+      console.error('Error loading OS:', error);
+    } finally {
+      setLoadingFilters(prev => ({ ...prev, os: false }));
+    }
+
+    // Load browsers
+    setLoadingFilters(prev => ({ ...prev, browsers: true }));
+    try {
+      console.log('Loading browsers...');
+      const browsersResponse = await apiService.getBrowsers();
+      console.log('Browsers response:', browsersResponse);
+      if (browsersResponse.success) {
+        const formattedBrowsers = browsersResponse.data.map(item => ({
+          id: item.browser_id || item.id,
+          name: item.name
+        }));
+        setBrowsers(formattedBrowsers);
+      } else {
+        console.error('Browsers API error:', browsersResponse.message);
+      }
+    } catch (error) {
+      console.error('Error loading browsers:', error);
+    } finally {
+      setLoadingFilters(prev => ({ ...prev, browsers: false }));
+    }
+
+    // Load languages
+    setLoadingFilters(prev => ({ ...prev, languages: true }));
+    try {
+      console.log('Loading languages...');
+      const languagesResponse = await apiService.getLanguages();
+      console.log('Languages response:', languagesResponse);
+      if (languagesResponse.success) {
+        const formattedLanguages = languagesResponse.data.map(item => ({
+          id: item.lang_id || item.id,
+          name: item.name
+        }));
+        setLanguages(formattedLanguages);
+      } else {
+        console.error('Languages API error:', languagesResponse.message);
+      }
+    } catch (error) {
+      console.error('Error loading languages:', error);
+    } finally {
+      setLoadingFilters(prev => ({ ...prev, languages: false }));
+    }
+
+    // Load timezones
+    setLoadingFilters(prev => ({ ...prev, timezones: true }));
+    try {
+      console.log('Loading timezones...');
+      const timezonesResponse = await apiService.getTimezones();
+      console.log('Timezones response:', timezonesResponse);
+      if (timezonesResponse.success) {
+        const formattedTimezones = timezonesResponse.data.map(item => ({
+          id: item.zone_id || item.id,
+          name: item.name
+        }));
+        setTimezones(formattedTimezones);
+      } else {
+        console.error('Timezones API error:', timezonesResponse.message);
+      }
+    } catch (error) {
+      console.error('Error loading timezones:', error);
+    } finally {
+      setLoadingFilters(prev => ({ ...prev, timezones: false }));
+    }
+
+    // Load connections
+    setLoadingFilters(prev => ({ ...prev, connections: true }));
+    try {
+      console.log('Loading connections...');
+      const connectionsResponse = await apiService.getConnections();
+      console.log('Connections response:', connectionsResponse);
+      if (connectionsResponse.success) {
+        const formattedConnections = connectionsResponse.data.map(item => ({
+          id: item.connection_id || item.id,
+          name: item.name
+        }));
+        setConnections(formattedConnections);
+      } else {
+        console.error('Connections API error:', connectionsResponse.message);
+      }
+    } catch (error) {
+      console.error('Error loading connections:', error);
+    } finally {
+      setLoadingFilters(prev => ({ ...prev, connections: false }));
+    }
+  };
+
   const loadFlow = async () => {
     if (!id) return;
     
@@ -117,6 +268,32 @@ const EditFlow: React.FC = () => {
       const response = await apiService.getFlowDetails(parseInt(id));
       if (response.success) {
         const flow = response.data;
+        
+        // 确保数组字段的正确处理
+        const parseArrayField = (field) => {
+          if (Array.isArray(field)) return field;
+          if (typeof field === 'string') {
+            try {
+              return JSON.parse(field);
+            } catch {
+              return field.split(',').map(item => parseInt(item.trim())).filter(item => !isNaN(item));
+            }
+          }
+          return [];
+        };
+
+        const parseStringArrayField = (field) => {
+          if (Array.isArray(field)) return field;
+          if (typeof field === 'string') {
+            try {
+              return JSON.parse(field);
+            } catch {
+              return field.split(',').map(item => item.trim()).filter(item => item.length > 0);
+            }
+          }
+          return [];
+        };
+
         setFormData({
           name: flow.name || '',
           url_white_page: flow.url_white_page || '',
@@ -124,13 +301,13 @@ const EditFlow: React.FC = () => {
           mode_white_page: flow.mode_white_page || 'redirect',
           mode_offer_page: flow.mode_offer_page || 'redirect',
           status: flow.status || 'active',
-          filter_countries: Array.isArray(flow.filter_countries) ? flow.filter_countries : [],
-          filter_devices: Array.isArray(flow.filter_devices) ? flow.filter_devices : [],
-          filter_os: Array.isArray(flow.filter_os) ? flow.filter_os : [],
-          filter_browsers: Array.isArray(flow.filter_browsers) ? flow.filter_browsers : [],
-          filter_langs: Array.isArray(flow.filter_langs) ? flow.filter_langs : [],
-          filter_time_zones: Array.isArray(flow.filter_time_zones) ? flow.filter_time_zones : [],
-          filter_connections: Array.isArray(flow.filter_connections) ? flow.filter_connections : [],
+          filter_countries: parseArrayField(flow.filter_countries),
+          filter_devices: parseArrayField(flow.filter_devices),
+          filter_os: parseArrayField(flow.filter_os),
+          filter_browsers: parseArrayField(flow.filter_browsers),
+          filter_langs: parseArrayField(flow.filter_langs),
+          filter_time_zones: parseArrayField(flow.filter_time_zones),
+          filter_connections: parseArrayField(flow.filter_connections),
           filter_cloaking_flag: Number(flow.filter_cloaking_flag) || 0,
           filter_vpn_proxy_flag: Number(flow.filter_vpn_proxy_flag) || 0,
           filter_ip_v6_flag: Number(flow.filter_ip_v6_flag) || 0,
@@ -147,7 +324,7 @@ const EditFlow: React.FC = () => {
           mode_list_time_zone: Number(flow.mode_list_time_zone) || 1,
           mode_list_connection: Number(flow.mode_list_connection) || 1,
           filter_id: Number(flow.filter_id) || 0,
-          allowed_ips: Array.isArray(flow.allowed_ips) ? flow.allowed_ips : []
+          allowed_ips: parseStringArrayField(flow.allowed_ips)
         });
       } else {
         setError(response.message || '获取流程信息失败');
@@ -159,127 +336,7 @@ const EditFlow: React.FC = () => {
     }
   };
 
-  const loadFilterData = async () => {
-    // Load countries
-    setLoadingFilters(prev => ({ ...prev, countries: true }));
-    try {
-      const countriesResponse = await apiService.getCountries();
-      if (countriesResponse.success) {
-        const formattedCountries = countriesResponse.data.map(item => ({
-          id: item.country_id || item.id,
-          name: item.name
-        }));
-        setCountries(formattedCountries);
-      }
-    } catch (error) {
-      console.error('Error loading countries:', error);
-    } finally {
-      setLoadingFilters(prev => ({ ...prev, countries: false }));
-    }
-
-    // Load devices
-    setLoadingFilters(prev => ({ ...prev, devices: true }));
-    try {
-      const devicesResponse = await apiService.getDevices();
-      if (devicesResponse.success) {
-        const formattedDevices = devicesResponse.data.map(item => ({
-          id: item.device_id || item.id,
-          name: item.name
-        }));
-        setDevices(formattedDevices);
-      }
-    } catch (error) {
-      console.error('Error loading devices:', error);
-    } finally {
-      setLoadingFilters(prev => ({ ...prev, devices: false }));
-    }
-
-    // Load operating systems
-    setLoadingFilters(prev => ({ ...prev, os: true }));
-    try {
-      const osResponse = await apiService.getOperatingSystems();
-      if (osResponse.success) {
-        const formattedOS = osResponse.data.map(item => ({
-          id: item.os_id || item.id,
-          name: item.name
-        }));
-        setOperatingSystems(formattedOS);
-      }
-    } catch (error) {
-      console.error('Error loading OS:', error);
-    } finally {
-      setLoadingFilters(prev => ({ ...prev, os: false }));
-    }
-
-    // Load browsers
-    setLoadingFilters(prev => ({ ...prev, browsers: true }));
-    try {
-      const browsersResponse = await apiService.getBrowsers();
-      if (browsersResponse.success) {
-        const formattedBrowsers = browsersResponse.data.map(item => ({
-          id: item.browser_id || item.id,
-          name: item.name
-        }));
-        setBrowsers(formattedBrowsers);
-      }
-    } catch (error) {
-      console.error('Error loading browsers:', error);
-    } finally {
-      setLoadingFilters(prev => ({ ...prev, browsers: false }));
-    }
-
-    // Load languages
-    setLoadingFilters(prev => ({ ...prev, languages: true }));
-    try {
-      const languagesResponse = await apiService.getLanguages();
-      if (languagesResponse.success) {
-        const formattedLanguages = languagesResponse.data.map(item => ({
-          id: item.lang_id || item.id,
-          name: item.name
-        }));
-        setLanguages(formattedLanguages);
-      }
-    } catch (error) {
-      console.error('Error loading languages:', error);
-    } finally {
-      setLoadingFilters(prev => ({ ...prev, languages: false }));
-    }
-
-    // Load timezones
-    setLoadingFilters(prev => ({ ...prev, timezones: true }));
-    try {
-      const timezonesResponse = await apiService.getTimezones();
-      if (timezonesResponse.success) {
-        const formattedTimezones = timezonesResponse.data.map(item => ({
-          id: item.zone_id || item.id,
-          name: item.name
-        }));
-        setTimezones(formattedTimezones);
-      }
-    } catch (error) {
-      console.error('Error loading timezones:', error);
-    } finally {
-      setLoadingFilters(prev => ({ ...prev, timezones: false }));
-    }
-
-    // Load connections
-    setLoadingFilters(prev => ({ ...prev, connections: true }));
-    try {
-      const connectionsResponse = await apiService.getConnections();
-      if (connectionsResponse.success) {
-        const formattedConnections = connectionsResponse.data.map(item => ({
-          id: item.connection_id || item.id,
-          name: item.name
-        }));
-        setConnections(formattedConnections);
-      }
-    } catch (error) {
-      console.error('Error loading connections:', error);
-    } finally {
-      setLoadingFilters(prev => ({ ...prev, connections: false }));
-    }
-  };
-
+  // 与CreateFlow完全相同的事件处理函数
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     
@@ -323,7 +380,7 @@ const EditFlow: React.FC = () => {
     setError('');
     setSuccess('');
 
-    // 验证必填字段
+    // 验证必填字段 - 与CreateFlow完全相同
     if (formData.filter_countries.length === 0) {
       setError('请至少选择一个国家');
       setIsLoading(false);
@@ -346,6 +403,8 @@ const EditFlow: React.FC = () => {
     }
 
     try {
+      console.log('Submitting form data:', formData);
+      
       const response = await apiService.updateFlow(parseInt(id!), formData);
       
       if (response.success) {
@@ -403,7 +462,7 @@ const EditFlow: React.FC = () => {
         </div>
       )}
 
-      {/* Form */}
+      {/* Form - 与CreateFlow完全相同的结构 */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
@@ -516,7 +575,7 @@ const EditFlow: React.FC = () => {
           </div>
         </div>
 
-        {/* Filtering Options */}
+        {/* Filtering Options - 与CreateFlow完全相同 */}
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">过滤设置</h3>
           
