@@ -275,12 +275,6 @@ const EditFlow: React.FC = () => {
         };
 
         console.log('📝 EditFlow: Setting form data:', newFormData);
-        console.log('🎯 EditFlow: Filter countries will be set to:', newFormData.filter_countries);
-        console.log('🎯 EditFlow: Filter devices will be set to:', newFormData.filter_devices);
-        console.log('🎯 EditFlow: Filter OS will be set to:', newFormData.filter_os);
-        console.log('🎯 EditFlow: Filter browsers will be set to:', newFormData.filter_browsers);
-        console.log('🎯 EditFlow: Filter languages will be set to:', newFormData.filter_langs);
-        console.log('🎯 EditFlow: Filter timezones will be set to:', newFormData.filter_time_zones);
         
         setFormData(newFormData);
         console.log('✅ EditFlow: Form data has been set');
@@ -408,6 +402,29 @@ const EditFlow: React.FC = () => {
       </div>
     );
   }
+
+  // 调试信息：打印当前 formData 状态
+  console.log('🔍 EditFlow Render: Current formData state:', formData);
+  console.log('🔍 EditFlow Render: filter_countries:', formData.filter_countries);
+  console.log('🔍 EditFlow Render: filter_devices:', formData.filter_devices);
+  console.log('🔍 EditFlow Render: filter_os:', formData.filter_os);
+  console.log('🔍 EditFlow Render: filter_browsers:', formData.filter_browsers);
+  console.log('🔍 EditFlow Render: filter_langs:', formData.filter_langs);
+  console.log('🔍 EditFlow Render: filter_time_zones:', formData.filter_time_zones);
+  console.log('🔍 EditFlow Render: filter_connections:', formData.filter_connections);
+  console.log('🔍 EditFlow Render: filter_cloaking_flag:', formData.filter_cloaking_flag);
+  console.log('🔍 EditFlow Render: filter_vpn_proxy_flag:', formData.filter_vpn_proxy_flag);
+  console.log('🔍 EditFlow Render: filter_ip_v6_flag:', formData.filter_ip_v6_flag);
+  console.log('🔍 EditFlow Render: filter_referer_flag:', formData.filter_referer_flag);
+  console.log('🔍 EditFlow Render: filter_isp_flag:', formData.filter_isp_flag);
+  console.log('🔍 EditFlow Render: filter_black_ip_flag:', formData.filter_black_ip_flag);
+  console.log('🔍 EditFlow Render: Countries options length:', countries.length);
+  console.log('🔍 EditFlow Render: Devices options length:', devices.length);
+  console.log('🔍 EditFlow Render: OS options length:', operatingSystems.length);
+  console.log('🔍 EditFlow Render: Browsers options length:', browsers.length);
+  console.log('🔍 EditFlow Render: Languages options length:', languages.length);
+  console.log('🔍 EditFlow Render: Timezones options length:', timezones.length);
+  console.log('🔍 EditFlow Render: Connections options length:', connections.length);
 
   return (
     <div className="space-y-6">
