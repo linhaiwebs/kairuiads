@@ -330,13 +330,8 @@ const CreateFlow: React.FC = () => {
 
     try {
       console.log('Submitting form data:', formData);
-      console.log('Selected countries:', formData.filter_countries);
-      console.log('Selected devices:', formData.filter_devices);
-      console.log('Selected OS:', formData.filter_os);
-      console.log('Selected browsers:', formData.filter_browsers);
       
       const response = await apiService.createFlow(formData);
-      console.log('Create flow response:', response);
       
       if (response.success) {
         setSuccess('流程创建成功！');
@@ -347,7 +342,6 @@ const CreateFlow: React.FC = () => {
         setError(response.message || '创建流程失败');
       }
     } catch (err: any) {
-      console.error('Create flow error:', err);
       setError(err.message || '网络错误，请重试');
     } finally {
       setIsLoading(false);

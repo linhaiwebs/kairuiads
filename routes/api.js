@@ -341,6 +341,38 @@ router.put('/flows/:id', authenticateToken, async (req, res) => {
     
     const formData = req.body;
 
+    // 验证必填字段
+    if (!formData.filter_countries || !Array.isArray(formData.filter_countries) || formData.filter_countries.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Countries are required. Please provide at least one country to proceed.',
+        error: 'Missing required field: filter_countries'
+      });
+    }
+    
+    if (!formData.filter_devices || !Array.isArray(formData.filter_devices) || formData.filter_devices.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Devices are required. Please provide at least one device to proceed.',
+        error: 'Missing required field: filter_devices'
+      });
+    }
+    
+    if (!formData.filter_os || !Array.isArray(formData.filter_os) || formData.filter_os.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Operating systems are required. Please provide at least one OS to proceed.',
+        error: 'Missing required field: filter_os'
+      });
+    }
+    
+    if (!formData.filter_browsers || !Array.isArray(formData.filter_browsers) || formData.filter_browsers.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Browsers are required. Please provide at least one browser to proceed.',
+        error: 'Missing required field: filter_browsers'
+      });
+    }
     // Prepare data for API request according to the specification
     const apiData = {
       flow_id: parseInt(id),
@@ -349,6 +381,7 @@ router.put('/flows/:id', authenticateToken, async (req, res) => {
       url_offer_page: formData.url_offer_page,
       mode_white_page: formData.mode_white_page,
       mode_offer_page: formData.mode_offer_page,
+      status: formData.status || 'active',
       filter_countries: formData.filter_countries || [],
       filter_devices: formData.filter_devices || [],
       filter_os: formData.filter_os || [],
