@@ -256,7 +256,9 @@ const FlowManagement: React.FC = () => {
   const handleDownloadIntegration = async (flowId: number) => {
     try {
       setError('');
+      console.log(`[FlowManagement] Attempting to download integration for flow ID: ${flowId}`);
       const response = await apiService.downloadFlowIntegration(flowId);
+      console.log('[FlowManagement] Download integration API response:', response); // Add this log
       if (response.success) {
         if (response.download_url) {
           // 创建一个隐藏的链接来触发下载
@@ -268,14 +270,18 @@ const FlowManagement: React.FC = () => {
           link.click();
           document.body.removeChild(link);
           setSuccess('集成文件下载已开始');
+          console.log(`[FlowManagement] Download initiated from URL: ${response.download_url}`);
         } else {
           setError('未获取到下载链接，请检查流程状态');
+          console.error('[FlowManagement] Download URL missing in response:', response);
         }
       } else {
         setError(response.message || '下载失败');
+        console.error('[FlowManagement] Download integration failed:', response);
       }
     } catch (error: any) {
       setError('下载失败，请重试');
+      console.error('[FlowManagement] Error during download integration:', error);
     }
   };
 
