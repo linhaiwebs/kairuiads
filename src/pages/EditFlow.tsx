@@ -268,32 +268,64 @@ const EditFlow: React.FC = () => {
       const response = await apiService.getFlowDetails(parseInt(id));
       if (response.success) {
         const flow = response.data;
+        console.log('Flow data from API:', flow);
         
         // 确保数组字段的正确处理
         const parseArrayField = (field) => {
+          console.log('Parsing array field:', field, typeof field);
           if (Array.isArray(field)) return field;
           if (typeof field === 'string') {
             try {
-              return JSON.parse(field);
+              const parsed = JSON.parse(field);
+              console.log('Parsed JSON:', parsed);
+              return Array.isArray(parsed) ? parsed : [];
             } catch {
-              return field.split(',').map(item => parseInt(item.trim())).filter(item => !isNaN(item));
+              const split = field.split(',').map(item => parseInt(item.trim())).filter(item => !isNaN(item));
+              console.log('Parsed CSV:', split);
+              return split;
             }
           }
+          if (typeof field === 'number') return [field];
           return [];
         };
 
         const parseStringArrayField = (field) => {
+          console.log('Parsing string array field:', field, typeof field);
           if (Array.isArray(field)) return field;
           if (typeof field === 'string') {
             try {
-              return JSON.parse(field);
+              const parsed = JSON.parse(field);
+              console.log('Parsed string JSON:', parsed);
+              return Array.isArray(parsed) ? parsed : [];
             } catch {
-              return field.split(',').map(item => item.trim()).filter(item => item.length > 0);
+              const split = field.split(',').map(item => item.trim()).filter(item => item.length > 0);
+              console.log('Parsed string CSV:', split);
+              return split;
             }
           }
           return [];
         };
 
+        // 解析过滤器数据
+        const parsedCountries = parseArrayField(flow.filter_countries);
+        const parsedDevices = parseArrayField(flow.filter_devices);
+        const parsedOs = parseArrayField(flow.filter_os);
+        const parsedBrowsers = parseArrayField(flow.filter_browsers);
+        const parsedLangs = parseArrayField(flow.filter_langs);
+        const parsedTimeZones = parseArrayField(flow.filter_time_zones);
+        const parsedConnections = parseArrayField(flow.filter_connections);
+        const parsedAllowedIps = parseStringArrayField(flow.allowed_ips);
+
+        console.log('Parsed filter data:', {
+          countries: parsedCountries,
+          devices: parsedDevices,
+          os: parsedOs,
+          browsers: parsedBrowsers,
+          langs: parsedLangs,
+          timeZones: parsedTimeZones,
+          connections: parsedConnections,
+          allowedIps: parsedAllowedIps
+        });
         setFormData({
           name: flow.name || '',
           url_white_page: flow.url_white_page || '',
@@ -301,13 +333,13 @@ const EditFlow: React.FC = () => {
           mode_white_page: flow.mode_white_page || 'redirect',
           mode_offer_page: flow.mode_offer_page || 'redirect',
           status: flow.status || 'active',
-          filter_countries: parseArrayField(flow.filter_countries),
-          filter_devices: parseArrayField(flow.filter_devices),
-          filter_os: parseArrayField(flow.filter_os),
-          filter_browsers: parseArrayField(flow.filter_browsers),
-          filter_langs: parseArrayField(flow.filter_langs),
-          filter_time_zones: parseArrayField(flow.filter_time_zones),
-          filter_connections: parseArrayField(flow.filter_connections),
+          filter_countries: parsedCountries,
+          filter_devices: parsedDevices,
+          filter_os: parsedOs,
+          filter_browsers: parsedBrowsers,
+          filter_langs: parsedLangs,
+          filter_time_zones: parsedTimeZones,
+          filter_connections: parsedConnections,
           filter_cloaking_flag: Number(flow.filter_cloaking_flag) || 0,
           filter_vpn_proxy_flag: Number(flow.filter_vpn_proxy_flag) || 0,
           filter_ip_v6_flag: Number(flow.filter_ip_v6_flag) || 0,
@@ -324,7 +356,20 @@ const EditFlow: React.FC = () => {
           mode_list_time_zone: Number(flow.mode_list_time_zone) || 1,
           mode_list_connection: Number(flow.mode_list_connection) || 1,
           filter_id: Number(flow.filter_id) || 0,
-          allowed_ips: parseStringArrayField(flow.allowed_ips)
+          allowed_ips: parsedAllowedIps
+        });
+        
+        console.log('Final form data set:', {
+          filter_countries: parsedCountries,
+          filter_devices: parsedDevices,
+          filter_os: parsedOs,
+          filter_browsers: parsedBrowsers,
+          filter_cloaking_flag: Number(flow.filter_cloaking_flag) || 0,
+          filter_vpn_proxy_flag: Number(flow.filter_vpn_proxy_flag) || 0,
+          filter_ip_v6_flag: Number(flow.filter_ip_v6_flag) || 0,
+          filter_referer_flag: Number(flow.filter_referer_flag) || 0,
+          filter_isp_flag: Number(flow.filter_isp_flag) || 0,
+          filter_black_ip_flag: Number(flow.filter_black_ip_flag) || 0
         });
       } else {
         setError(response.message || '获取流程信息失败');
