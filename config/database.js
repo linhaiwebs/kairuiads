@@ -19,73 +19,18 @@ let db;
 // 创建数据库连接
 const createDatabaseConnection = () => {
   return new Promise((resolve, reject) => {
-    if (dbPath === ':memory:') {
-      console.log('✅ 使用内存数据库（WebContainer环境）');
-      const memoryDb = new sqlite3Verbose.Database(':memory:', (err) => {
-        if (err) {
-          console.error('❌ 无法创建内存数据库:', err);
-          reject(err);
-        } else {
-          resolve(memoryDb);
-        }
-      });
-    } else {
-      // 尝试文件数据库
-      const fileDb = new sqlite3Verbose.Database(dbPath, (err) => {
-        if (err) {
-          console.warn('⚠️  无法创建文件数据库，切换到内存数据库:', err.message);
-          
-          // 如果文件数据库失败，使用内存数据库
-          const memoryDb = new sqlite3Verbose.Database(':memory:', (memErr) => {
-            if (memErr) {
-              console.error('❌ 无法创建内存数据库:', memErr);
-              reject(memErr);
-            } else {
-              console.log('✅ 使用内存数据库连接');
-              resolve(memoryDb);
-            }
-          });
-        } else {
-          console.log('✅ 使用文件数据库连接:', dbPath);
-          resolve(fileDb);
-        }
-      });
-    }
-  });
-};
-
-// 确保数据库目录存在（仅在非内存数据库时）
-if (dbPath !== ':memory:') {
-  try {
-    if (!fs.existsSync(dbDir)) {
-      fs.mkdirSync(dbDir, { recursive: true });
-      console.log('Created database directory:', dbDir);
-    }
-    
-    // Remove any existing lock files
-    const lockFiles = [dbPath + '.lock', dbPath + '-wal', dbPath + '-shm'];
-    lockFiles.forEach(file => {
-      if (fs.existsSync(file)) {
-        try {
-          fs.unlinkSync(file);
-          console.log(`Removed existing database file: ${path.basename(file)}`);
-        } catch (err) {
-          console.warn(`Could not remove file ${file}:`, err.message);
-        }
+    console.log('✅ 使用内存数据库（WebContainer环境）');
+    const memoryDb = new sqlite3Verbose.Database(':memory:', (err) => {
+      if (err) {
+        console.error('❌ 无法创建内存数据库:', err);
+        reject(err);
+      } else {
+        console.log('✅ 内存数据库连接成功');
+        resolve(memoryDb);
       }
     });
-    
-    // Set directory permissions
-    try {
-      fs.chmodSync(dbDir, 0o755);
-      console.log('Set database directory permissions: 755');
-    } catch (err) {
-      console.warn('Could not set directory permissions:', err.message);
-    }
-  } catch (err) {
-    console.warn('Database directory setup failed, will use memory database:', err.message);
-  }
-}
+  });
+};
 
 // 初始化数据库连接
 try {
@@ -94,24 +39,11 @@ try {
   // Configure database for better performance and reliability
   if (db) {
     db.configure('busyTimeout', 30000); // 30 second timeout
-    
-    // 只对文件数据库设置这些PRAGMA，内存数据库可能不支持
-    if (dbPath !== ':memory:') {
-      try {
-        db.run('PRAGMA journal_mode = WAL');
-        db.run('PRAGMA synchronous = NORMAL');
-        db.run('PRAGMA cache_size = 1000');
-        db.run('PRAGMA temp_store = MEMORY');
-      } catch (err) {
-        console.warn('Could not set PRAGMA settings:', err.message);
-      }
-    }
+    console.log('✅ 数据库配置完成');
   }
 } catch (err) {
   console.error('❌ 数据库连接失败:', err);
-  // 作为最后的备选方案，创建一个内存数据库
-  db = new sqlite3Verbose.Database(':memory:');
-  console.log('✅ 使用内存数据库作为备选方案');
+  process.exit(1);
 }
 
 const initializeDatabase = async () => {

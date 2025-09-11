@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:frontend": "vite",
-    "dev:backend": "node setup-db.js && node server.js",
+    "dev:backend": "node server.js",
     "build": "vite build",
     "build:production": "NODE_ENV=production vite build",
     "prod": "npm run build:production && NODE_ENV=production node server.js",

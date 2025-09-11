@@ -10,7 +10,9 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
-console.log('Starting server...');
+console.log('🚀 Starting Kairui Flow Management Server...');
+console.log('📋 Environment:', process.env.NODE_ENV || 'development');
+console.log('📋 Port:', process.env.PORT || 3001);
 
 // Set JWT secret if not provided
 if (!process.env.JWT_SECRET) {
