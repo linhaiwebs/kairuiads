@@ -588,18 +588,25 @@ router.post('/flows/:id/download', authenticateToken, async (req, res) => {
       });
     }
     
+    console.log(`[API] Starting download integration for flow ID: ${id}`);
+    
     const apiData = {
       flow_id: parseInt(id)
     };
 
+    console.log(`[API] Sending download request to external API with data:`, apiData);
     const data = await makeApiRequest('/flows/download', apiData);
+    console.log(`[API] External API response for download:`, data);
     
+    // 确保返回正确的数据结构
     res.json({
       success: data.status === 'success',
       data: data.data || {},
       message: data.msg || 'Success',
       status: data.status,
-      code: data.code
+      code: data.code,
+      // 如果API直接返回download_url在根级别，也包含它
+      ...(data.download_url && { download_url: data.download_url })
     });
 
   } catch (error) {

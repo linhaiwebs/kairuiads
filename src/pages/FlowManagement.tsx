@@ -256,32 +256,47 @@ const FlowManagement: React.FC = () => {
   const handleDownloadIntegration = async (flowId: number) => {
     try {
       setError('');
+      setSuccess('');
       console.log(`[FlowManagement] Attempting to download integration for flow ID: ${flowId}`);
       const response = await apiService.downloadFlowIntegration(flowId);
       console.log('[FlowManagement] Download integration API response:', response); // Add this log
+      
       if (response.success) {
-        if (response.download_url) {
-          // 创建一个隐藏的链接来触发下载
-          const link = document.createElement('a');
-          link.href = response.download_url;
-          link.download = `flow_${flowId}_integration.zip`;
-          link.target = '_blank';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          setSuccess('集成文件下载已开始');
-          console.log(`[FlowManagement] Download initiated from URL: ${response.download_url}`);
+        if (response.data && response.data.download_url) {
+          const downloadUrl = response.data.download_url;
+          console.log(`[FlowManagement] Download URL received: ${downloadUrl}`);
+          
+          try {
+            // 方法1: 直接使用window.open
+            window.open(downloadUrl, '_blank');
+            setSuccess('集成文件下载已开始');
+            console.log(`[FlowManagement] Download initiated via window.open: ${downloadUrl}`);
+          } catch (openError) {
+            console.error('[FlowManagement] window.open failed, trying alternative method:', openError);
+            
+            // 方法2: 使用隐藏链接
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = `flow_${flowId}_integration.zip`;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setSuccess('集成文件下载已开始');
+            console.log(`[FlowManagement] Download initiated via hidden link: ${downloadUrl}`);
+          }
         } else {
+          console.error('[FlowManagement] Download URL missing in response data:', response);
           setError('未获取到下载链接，请检查流程状态');
-          console.error('[FlowManagement] Download URL missing in response:', response);
         }
       } else {
-        setError(response.message || '下载失败');
         console.error('[FlowManagement] Download integration failed:', response);
+        setError(response.message || '下载失败');
       }
     } catch (error: any) {
-      setError('下载失败，请重试');
       console.error('[FlowManagement] Error during download integration:', error);
+      setError('下载失败，请重试');
     }
   };
 
