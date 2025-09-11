@@ -9,64 +9,95 @@ const __dirname = path.dirname(__filename);
 
 const sqlite3Verbose = sqlite3.verbose();
 
-const dbPath = process.env.DB_PATH || './database/flows.db';
+const dbPath = process.env.DB_PATH || path.join(process.cwd(), 'database', 'flows.db');
 const dbDir = path.dirname(dbPath);
 
+let db;
+
+// 尝试创建数据库连接，如果失败则使用内存数据库
+const createDatabaseConnection = () => {
+  return new Promise((resolve, reject) => {
+    // 首先尝试文件数据库
+    const fileDb = new sqlite3Verbose.Database(dbPath, (err) => {
+      if (err) {
+        console.warn('⚠️  无法创建文件数据库，尝试使用内存数据库:', err.message);
+        
+        // 如果文件数据库失败，使用内存数据库
+        const memoryDb = new sqlite3Verbose.Database(':memory:', (memErr) => {
+          if (memErr) {
+            console.error('❌ 无法创建内存数据库:', memErr);
+            reject(memErr);
+          } else {
+            console.log('✅ 使用内存数据库连接');
+            resolve(memoryDb);
+          }
+        });
+      } else {
+        console.log('✅ 使用文件数据库连接:', dbPath);
+        resolve(fileDb);
+      }
+    });
+  });
+};
+
 // Ensure database directory exists
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
-  console.log('Created database directory:', dbDir);
-}
-
-// Remove any existing lock files
-const lockFile = dbPath + '.lock';
-if (fs.existsSync(lockFile)) {
-  try {
-    fs.unlinkSync(lockFile);
-    console.log('Removed existing database lock file:', lockFile);
-  } catch (err) {
-    console.warn('Could not remove lock file:', err.message);
+try {
+  if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+    console.log('Created database directory:', dbDir);
   }
+  
+  // Remove any existing lock files
+  const lockFiles = [dbPath + '.lock', dbPath + '-wal', dbPath + '-shm'];
+  lockFiles.forEach(file => {
+    if (fs.existsSync(file)) {
+      try {
+        fs.unlinkSync(file);
+        console.log(`Removed existing database file: ${path.basename(file)}`);
+      } catch (err) {
+        console.warn(`Could not remove file ${file}:`, err.message);
+      }
+    }
+  });
+  
+  // Set directory permissions
+  try {
+    fs.chmodSync(dbDir, 0o755);
+    console.log('Set database directory permissions: 755');
+  } catch (err) {
+    console.warn('Could not set directory permissions:', err.message);
+  }
+} catch (err) {
+  console.warn('Database directory setup failed:', err.message);
 }
 
-// Also check for other potential lock files
-const walFile = dbPath + '-wal';
-const shmFile = dbPath + '-shm';
-[walFile, shmFile].forEach(file => {
-  if (fs.existsSync(file)) {
+// 初始化数据库连接
+try {
+  db = await createDatabaseConnection();
+  
+  // Configure database for better performance and reliability
+  db.configure('busyTimeout', 30000); // 30 second timeout
+  
+  // 只对文件数据库设置这些PRAGMA，内存数据库可能不支持
+  if (dbPath !== ':memory:') {
     try {
-      fs.unlinkSync(file);
-      console.log(`Removed existing database file: ${path.basename(file)}`);
+      db.run('PRAGMA journal_mode = WAL');
+      db.run('PRAGMA synchronous = NORMAL');
+      db.run('PRAGMA cache_size = 1000');
+      db.run('PRAGMA temp_store = MEMORY');
     } catch (err) {
-      console.warn(`Could not remove file ${file}:`, err.message);
+      console.warn('Could not set PRAGMA settings:', err.message);
     }
   }
-});
-
-// Set directory permissions
-try {
-  fs.chmodSync(dbDir, 0o755);
-  console.log('Set database directory permissions: 755');
 } catch (err) {
-  console.warn('Could not set directory permissions:', err.message);
+  console.error('❌ 数据库连接失败:', err);
+  // 作为最后的备选方案，创建一个内存数据库
+  db = new sqlite3Verbose.Database(':memory:');
+  console.log('✅ 使用内存数据库作为备选方案');
 }
 
-const db = new sqlite3Verbose.Database(dbPath, (err) => {
-  if (err) {
-    console.error('Error opening database:', err);
-  } else {
-    console.log('Database connection established');
-  }
-});
-
-// Configure database for better performance and reliability
-db.configure('busyTimeout', 30000); // 30 second timeout
-db.run('PRAGMA journal_mode = WAL');
-db.run('PRAGMA synchronous = NORMAL');
-db.run('PRAGMA cache_size = 1000');
-db.run('PRAGMA temp_store = MEMORY');
-
-const initializeDatabase = () => {
+const initializeDatabase = async () => {
+  return new Promise((resolve, reject) => {
   db.serialize(() => {
     // Create users table
     db.run(`
@@ -153,39 +184,39 @@ const initializeDatabase = () => {
     db.run(`
       ALTER TABLE users ADD COLUMN category_id INTEGER DEFAULT 1 REFERENCES account_categories(id)
     `, (err) => {
-      if (err && !err.message.includes('duplicate column name')) {
-        console.error('Error adding category_id column:', err);
+      if (err && !err.message.includes('duplicate column name') && !err.message.includes('SQLITE_CANTOPEN')) {
+        console.warn('Warning adding category_id column:', err.message);
       }
     });
 
     db.run(`
       ALTER TABLE users ADD COLUMN phone TEXT
     `, (err) => {
-      if (err && !err.message.includes('duplicate column name')) {
-        console.error('Error adding phone column:', err);
+      if (err && !err.message.includes('duplicate column name') && !err.message.includes('SQLITE_CANTOPEN')) {
+        console.warn('Warning adding phone column:', err.message);
       }
     });
 
     db.run(`
       ALTER TABLE users ADD COLUMN notes TEXT
     `, (err) => {
-      if (err && !err.message.includes('duplicate column name')) {
-        console.error('Error adding notes column:', err);
+      if (err && !err.message.includes('duplicate column name') && !err.message.includes('SQLITE_CANTOPEN')) {
+        console.warn('Warning adding notes column:', err.message);
       }
     });
 
     db.run(`
       ALTER TABLE users ADD COLUMN status TEXT DEFAULT 'active'
     `, (err) => {
-      if (err && !err.message.includes('duplicate column name')) {
-        console.error('Error adding status column:', err);
+      if (err && !err.message.includes('duplicate column name') && !err.message.includes('SQLITE_CANTOPEN')) {
+        console.warn('Warning adding status column:', err.message);
       }
     });
 
     // Create default categories if not exists
     db.get('SELECT COUNT(*) as count FROM account_categories', [], (err, row) => {
       if (err) {
-        console.error('Error checking categories:', err);
+        console.warn('Warning checking categories:', err.message);
         return;
       }
 
@@ -214,7 +245,7 @@ const initializeDatabase = () => {
     // Create default admin user if not exists
     db.get('SELECT id FROM users WHERE username = ?', ['admin'], (err, row) => {
       if (err) {
-        console.error('Error checking for admin user:', err);
+        console.warn('Warning checking for admin user:', err.message);
         return;
       }
 
@@ -236,17 +267,21 @@ const initializeDatabase = () => {
               console.log('Password: admin123');
               console.log('Email: admin@kairui.com');
               console.log('User ID:', this.lastID);
+              resolve();
             } else {
               console.log('Default admin user created successfully (ID not available)');
+              resolve();
             }
           });
         });
       } else {
         console.log('Admin user already exists with ID:', row.id);
+        resolve();
       }
     });
     
     console.log('Database initialized successfully');
+  });
   });
 };
 

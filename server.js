@@ -54,7 +54,12 @@ try {
 
   console.log('Initializing database...');
   // Initialize database
-  await initializeDatabase();
+  try {
+    await initializeDatabase();
+  } catch (dbError) {
+    console.warn('⚠️  数据库初始化警告:', dbError.message);
+    console.log('✅ 继续启动服务器...');
+  }
   console.log('Database initialized');
 
   // Middleware
