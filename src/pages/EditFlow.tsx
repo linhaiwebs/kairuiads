@@ -106,8 +106,15 @@ const EditFlow: React.FC = () => {
 
   useEffect(() => {
     loadFilterData();
-    loadFlow();
   }, [id]);
+
+  useEffect(() => {
+    // 当过滤选项加载完成后再加载流程数据
+    const allFiltersLoaded = !Object.values(loadingFilters).some(loading => loading);
+    if (allFiltersLoaded && countries.length > 0) {
+      loadFlow();
+    }
+  }, [loadingFilters, countries.length, devices.length, operatingSystems.length, browsers.length]);
 
   // 与CreateFlow完全相同的数据加载逻辑
   const loadFilterData = async () => {
@@ -326,6 +333,29 @@ const EditFlow: React.FC = () => {
           connections: parsedConnections,
           allowedIps: parsedAllowedIps
         });
+
+        // 等待所有过滤选项加载完成后再设置表单数据
+        const waitForFiltersToLoad = () => {
+          return new Promise((resolve) => {
+            const checkInterval = setInterval(() => {
+              const allLoaded = !Object.values(loadingFilters).some(loading => loading);
+              if (allLoaded && countries.length > 0 && devices.length > 0 && operatingSystems.length > 0 && browsers.length > 0) {
+                clearInterval(checkInterval);
+                resolve(true);
+              }
+            }, 100);
+            
+            // 超时保护
+            setTimeout(() => {
+              clearInterval(checkInterval);
+              resolve(true);
+            }, 10000);
+          });
+        };
+
+        await waitForFiltersToLoad();
+        
+        console.log('Setting form data with parsed values...');
         setFormData({
           name: flow.name || '',
           url_white_page: flow.url_white_page || '',
@@ -359,6 +389,14 @@ const EditFlow: React.FC = () => {
           allowed_ips: parsedAllowedIps
         });
         
+        console.log('Form data has been set with filter values:', {
+          filter_countries: parsedCountries,
+          filter_devices: parsedDevices,
+          filter_os: parsedOs,
+          filter_browsers: parsedBrowsers,
+          filter_cloaking_flag: Number(flow.filter_cloaking_flag) || 0,
+          filter_vpn_proxy_flag: Number(flow.filter_vpn_proxy_flag) || 0
+        });
         console.log('Final form data set:', {
           filter_countries: parsedCountries,
           filter_devices: parsedDevices,
