@@ -262,8 +262,8 @@ const FlowManagement: React.FC = () => {
       console.log('[FlowManagement] Download integration API response:', response); // Add this log
       
       if (response.success) {
-        if (response.data && response.data.download_url) {
-          const downloadUrl = response.data.download_url;
+        if (response.download_url) { // 修正：直接从根级别获取 download_url
+          const downloadUrl = response.download_url;
           console.log(`[FlowManagement] Download URL received: ${downloadUrl}`);
           
           try {
