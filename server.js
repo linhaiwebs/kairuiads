@@ -30,7 +30,7 @@ try {
   const conversionsRoutes = await import('./routes/conversions.js');
   const apiLogsRoutes = await import('./routes/apiLogs.js');
   const { logApiRequest } = await import('./middleware/requestLogger.js');
-  const { initializeDatabase } = await import('./config/database.js');
+  const { initializeDatabase, closeConnection } = await import('./config/database.js');
 
   const app = express();
   const PORT = process.env.PORT || 3001;
@@ -71,6 +71,19 @@ try {
 
   app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
+  });
+
+  // Graceful shutdown
+  process.on('SIGINT', async () => {
+    console.log('\n🔄 正在关闭服务器...');
+    try {
+      await closeConnection();
+      console.log('✅ 服务器已安全关闭');
+      process.exit(0);
+    } catch (error) {
+      console.error('❌ 关闭服务器时出错:', error);
+      process.exit(1);
+    }
   });
 
 } catch (error) {

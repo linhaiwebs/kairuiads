@@ -1,11 +1,11 @@
 import express from 'express';
-import { db } from '../config/database.js';
+import { getConnection } from '../config/database.js';
 import { authenticateToken } from '../middleware/auth.js';
 import { logConversionRequest } from '../middleware/requestLogger.js';
 
 const router = express.Router();
 
-// Helper function to get client IP (duplicate from requestLogger for this route)
+// Helper function to get client IP
 const getClientIP = (req) => {
   return req.headers['x-forwarded-for'] || 
          req.headers['x-real-ip'] || 
@@ -17,7 +17,6 @@ const getClientIP = (req) => {
 
 // Helper function to parse CSV line properly handling quoted fields
 const detectDelimiter = (line) => {
-  // Count commas and tabs outside of quotes
   let commaCount = 0;
   let tabCount = 0;
   let inQuotes = false;
@@ -46,30 +45,25 @@ const parseCSVLine = (line, delimiter = ',') => {
 
     if (char === '"') {
       if (inQuotes && nextChar === '"') {
-        // Escaped quote - add one quote to current field
         current += '"';
-        i++; // Skip the next quote
+        i++;
       } else {
-        // Toggle quote state
         inQuotes = !inQuotes;
       }
     } else if (char === delimiter && !inQuotes) {
-      // Field separator outside quotes
       result.push(current.trim());
       current = '';
     } else {
-      // Regular character
       current += char;
     }
   }
 
-  // Add the last field
   result.push(current.trim());
   return result;
 };
 
 // POST /api/ggads/conversions - 接收转化数据
-router.post('/ggads/conversions', logConversionRequest, (req, res) => {
+router.post('/ggads/conversions', logConversionRequest, async (req, res) => {
   try {
     console.log(`[ConversionAPI] 🎯 Processing conversion request from IP: ${getClientIP(req)}`);
     console.log(`[ConversionAPI] 🎯 Request body:`, req.body);
@@ -100,11 +94,11 @@ router.post('/ggads/conversions', logConversionRequest, (req, res) => {
       });
     }
 
-    // 获取客户端IP
     const client_ip = getClientIP(req);
+    const db = getConnection();
 
     // 插入数据到数据库
-    db.run(`
+    const [result] = await db.execute(`
       INSERT INTO conversions (
         gclid, conversion_name, conversion_time, stock_code, 
         user_agent, referrer_url, client_ip
@@ -117,21 +111,13 @@ router.post('/ggads/conversions', logConversionRequest, (req, res) => {
       user_agent || null,
       referrer_url || null,
       client_ip || null
-    ], function(err) {
-      if (err) {
-        console.error('Error inserting conversion data:', err);
-        return res.status(500).json({
-          status: 'error',
-          message: 'Failed to save conversion data'
-        });
-      }
+    ]);
 
-      console.log('Conversion data saved with ID:', this.lastID);
-      res.status(200).json({
-        status: 'success',
-        message: 'Data received successfully.',
-        id: this.lastID
-      });
+    console.log('Conversion data saved with ID:', result.insertId);
+    res.status(200).json({
+      status: 'success',
+      message: 'Data received successfully.',
+      id: result.insertId
     });
 
   } catch (error) {
@@ -144,7 +130,7 @@ router.post('/ggads/conversions', logConversionRequest, (req, res) => {
 });
 
 // GET /api/conversions - 获取转化数据列表
-router.get('/conversions', authenticateToken, (req, res) => {
+router.get('/conversions', authenticateToken, async (req, res) => {
   try {
     const {
       page = 1,
@@ -157,6 +143,8 @@ router.get('/conversions', authenticateToken, (req, res) => {
     } = req.query;
 
     const offset = (parseInt(page) - 1) * parseInt(per_page);
+    const db = getConnection();
+    
     let whereClause = 'WHERE 1=1';
     let params = [];
 
@@ -197,57 +185,41 @@ router.get('/conversions', authenticateToken, (req, res) => {
 
     // 获取总数
     const countQuery = `SELECT COUNT(*) as total FROM conversions ${whereClause}`;
-    db.get(countQuery, params, (err, countResult) => {
-      if (err) {
-        console.error('Error counting conversions:', err);
-        return res.status(500).json({
-          success: false,
-          message: '获取转化数据总数失败'
-        });
-      }
+    const [countResult] = await db.execute(countQuery, params);
 
-      // 获取数据
-      const dataQuery = `
-        SELECT 
-          id, gclid, conversion_name, conversion_time, stock_code,
-          user_agent, referrer_url, client_ip, created_at
-        FROM conversions 
-        ${whereClause}
-        ORDER BY conversion_time DESC 
-        LIMIT ? OFFSET ?
-      `;
+    // 获取数据
+    const dataQuery = `
+      SELECT 
+        id, gclid, conversion_name, conversion_time, stock_code,
+        user_agent, referrer_url, client_ip, created_at
+      FROM conversions 
+      ${whereClause}
+      ORDER BY conversion_time DESC 
+      LIMIT ? OFFSET ?
+    `;
 
-      db.all(dataQuery, [...params, parseInt(per_page), offset], (err, rows) => {
-        if (err) {
-          console.error('Error fetching conversions:', err);
-          return res.status(500).json({
-            success: false,
-            message: '获取转化数据失败'
-          });
-        }
+    const [rows] = await db.execute(dataQuery, [...params, parseInt(per_page), offset]);
 
-        res.json({
-          success: true,
-          data: rows,
-          total: countResult.total,
-          page: parseInt(page),
-          per_page: parseInt(per_page),
-          total_pages: Math.ceil(countResult.total / parseInt(per_page))
-        });
-      });
+    res.json({
+      success: true,
+      data: rows,
+      total: countResult[0].total,
+      page: parseInt(page),
+      per_page: parseInt(per_page),
+      total_pages: Math.ceil(countResult[0].total / parseInt(per_page))
     });
 
   } catch (error) {
     console.error('Error fetching conversions:', error);
     res.status(500).json({
       success: false,
-      message: '服务器错误'
+      message: '获取转化数据失败'
     });
   }
 });
 
 // GET /api/conversions/export - 导出CSV
-router.get('/conversions/export', authenticateToken, (req, res) => {
+router.get('/conversions/export', authenticateToken, async (req, res) => {
   try {
     const {
       search = '',
@@ -257,6 +229,7 @@ router.get('/conversions/export', authenticateToken, (req, res) => {
       end_date = ''
     } = req.query;
 
+    const db = getConnection();
     let whereClause = 'WHERE 1=1';
     let params = [];
 
@@ -301,39 +274,30 @@ router.get('/conversions/export', authenticateToken, (req, res) => {
       ORDER BY conversion_time DESC
     `;
 
-    db.all(query, params, (err, rows) => {
-      if (err) {
-        console.error('Error exporting conversions:', err);
-        return res.status(500).json({
-          success: false,
-          message: '导出数据失败'
-        });
-      }
+    const [rows] = await db.execute(query, params);
 
-      // 生成CSV内容
-      const headers = ['gclid', 'conversion_name', 'conversion_time', 'stock_code', 'user_agent', 'referrer_url', 'client_ip'];
-      let csvContent = headers.join(',') + '\n';
+    // 生成CSV内容
+    const headers = ['gclid', 'conversion_name', 'conversion_time', 'stock_code', 'user_agent', 'referrer_url', 'client_ip'];
+    let csvContent = headers.join(',') + '\n';
 
-      rows.forEach(row => {
-        const values = headers.map(header => {
-          const value = row[header] || '';
-          // 如果值包含逗号、引号或换行符，需要用引号包围并转义引号
-          if (value.toString().includes(',') || value.toString().includes('"') || value.toString().includes('\n')) {
-            return `"${value.toString().replace(/"/g, '""')}"`;
-          }
-          return value;
-        });
-        csvContent += values.join(',') + '\n';
+    rows.forEach(row => {
+      const values = headers.map(header => {
+        const value = row[header] || '';
+        if (value.toString().includes(',') || value.toString().includes('"') || value.toString().includes('\n')) {
+          return `"${value.toString().replace(/"/g, '""')}"`;
+        }
+        return value;
       });
-
-      // 设置响应头
-      const filename = `conversions_${new Date().toISOString().split('T')[0]}.csv`;
-      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-      res.setHeader('Content-Length', Buffer.byteLength(csvContent, 'utf8'));
-
-      res.send(csvContent);
+      csvContent += values.join(',') + '\n';
     });
+
+    // 设置响应头
+    const filename = `conversions_${new Date().toISOString().split('T')[0]}.csv`;
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Length', Buffer.byteLength(csvContent, 'utf8'));
+
+    res.send(csvContent);
 
   } catch (error) {
     console.error('Error exporting conversions:', error);
@@ -345,9 +309,10 @@ router.get('/conversions/export', authenticateToken, (req, res) => {
 });
 
 // POST /api/conversions/import - 导入CSV
-router.post('/conversions/import', authenticateToken, (req, res) => {
+router.post('/conversions/import', authenticateToken, async (req, res) => {
   try {
     const { csvData } = req.body;
+    const db = getConnection();
 
     if (!csvData) {
       return res.status(400).json({
@@ -396,7 +361,6 @@ router.post('/conversions/import', authenticateToken, (req, res) => {
 
       const rowData = {};
       headers.forEach((header, i) => {
-        // Remove surrounding quotes if present and handle empty values
         let value = values[i] || '';
         if (value.startsWith('"') && value.endsWith('"')) {
           value = value.slice(1, -1);
@@ -432,9 +396,9 @@ router.post('/conversions/import', authenticateToken, (req, res) => {
     let successCount = 0;
     let errorCount = 0;
 
-    const insertPromises = validRows.map(row => {
-      return new Promise((resolve) => {
-        db.run(`
+    for (const row of validRows) {
+      try {
+        await db.execute(`
           INSERT INTO conversions (
             gclid, conversion_name, conversion_time, stock_code,
             user_agent, referrer_url, client_ip
@@ -447,26 +411,19 @@ router.post('/conversions/import', authenticateToken, (req, res) => {
           row.user_agent,
           row.referrer_url,
           row.client_ip
-        ], function(err) {
-          if (err) {
-            console.error('Error inserting row:', err);
-          console.log(`[ConversionAPI] ❌ Database insert failed:`, err);
-            errorCount++;
-          } else {
-            successCount++;
-          }
-          resolve();
-        });
-      });
-    });
+        ]);
+        successCount++;
+      } catch (err) {
+        console.error('Error inserting row:', err);
+        errorCount++;
+      }
+    }
 
-    Promise.all(insertPromises).then(() => {
-      res.json({
-        success: true,
-        message: `导入完成: 成功${successCount}条，失败${errorCount}条`,
-        imported: successCount,
-        failed: errorCount
-      });
+    res.json({
+      success: true,
+      message: `导入完成: 成功${successCount}条，失败${errorCount}条`,
+      imported: successCount,
+      failed: errorCount
     });
 
   } catch (error) {
@@ -479,86 +436,59 @@ router.post('/conversions/import', authenticateToken, (req, res) => {
 });
 
 // GET /api/conversions/stats - 获取统计信息
-router.get('/conversions/stats', authenticateToken, (req, res) => {
+router.get('/conversions/stats', authenticateToken, async (req, res) => {
   try {
-    const queries = [
-      // 总转化数
-      'SELECT COUNT(*) as total FROM conversions',
-      // 今日转化数
-      'SELECT COUNT(*) as today FROM conversions WHERE DATE(conversion_time) = DATE("now")',
-      // 转化名称统计
-      'SELECT conversion_name, COUNT(*) as count FROM conversions GROUP BY conversion_name ORDER BY count DESC LIMIT 10',
-      // 落地页来源统计
-      'SELECT referrer_url, COUNT(*) as count FROM conversions WHERE referrer_url IS NOT NULL GROUP BY referrer_url ORDER BY count DESC LIMIT 10'
-    ];
+    const db = getConnection();
 
-    Promise.all(queries.map(query => {
-      return new Promise((resolve, reject) => {
-        db.all(query, [], (err, rows) => {
-          if (err) reject(err);
-          else resolve(rows);
-        });
-      });
-    })).then(results => {
-      res.json({
-        success: true,
-        data: {
-          total: results[0][0].total,
-          today: results[1][0].today,
-          conversionNames: results[2],
-          referrerUrls: results[3]
-        }
-      });
-    }).catch(error => {
-      console.error('Error fetching stats:', error);
-      res.status(500).json({
-        success: false,
-        message: '获取统计数据失败'
-      });
+    const [totalResult] = await db.execute('SELECT COUNT(*) as total FROM conversions');
+    const [todayResult] = await db.execute('SELECT COUNT(*) as today FROM conversions WHERE DATE(conversion_time) = CURDATE()');
+    const [conversionNames] = await db.execute('SELECT conversion_name, COUNT(*) as count FROM conversions GROUP BY conversion_name ORDER BY count DESC LIMIT 10');
+    const [referrerUrls] = await db.execute('SELECT referrer_url, COUNT(*) as count FROM conversions WHERE referrer_url IS NOT NULL GROUP BY referrer_url ORDER BY count DESC LIMIT 10');
+
+    res.json({
+      success: true,
+      data: {
+        total: totalResult[0].total,
+        today: todayResult[0].today,
+        conversionNames: conversionNames,
+        referrerUrls: referrerUrls
+      }
     });
 
   } catch (error) {
     console.error('Error fetching conversion stats:', error);
     res.status(500).json({
       success: false,
-      message: '服务器错误'
+      message: '获取统计数据失败'
     });
   }
 });
 
 // DELETE /api/conversions/:id - 删除转化记录
-router.delete('/conversions/:id', authenticateToken, (req, res) => {
+router.delete('/conversions/:id', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
+    const db = getConnection();
 
-    db.run('DELETE FROM conversions WHERE id = ?', [id], function(err) {
-      if (err) {
-        console.error('Error deleting conversion:', err);
-        return res.status(500).json({
-          success: false,
-          message: '删除转化记录失败'
-        });
-      }
+    const [result] = await db.execute('DELETE FROM conversions WHERE id = ?', [id]);
 
-      if (this.changes === 0) {
-        return res.status(404).json({
-          success: false,
-          message: '转化记录不存在'
-        });
-      }
-
-
-      res.json({
-        success: true,
-        message: '转化记录删除成功'
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        message: '转化记录不存在'
       });
+    }
+
+    res.json({
+      success: true,
+      message: '转化记录删除成功'
     });
 
   } catch (error) {
     console.error('Error deleting conversion:', error);
     res.status(500).json({
       success: false,
-      message: '服务器错误'
+      message: '删除转化记录失败'
     });
   }
 });

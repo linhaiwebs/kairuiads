@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { db } from '../config/database.js';
+import { getConnection } from '../config/database.js';
 
-export const authenticateToken = (req, res, next) => {
+export const authenticateToken = async (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -13,7 +13,7 @@ export const authenticateToken = (req, res, next) => {
       });
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
       if (err) {
         return res.status(403).json({
           success: false,
@@ -21,19 +21,30 @@ export const authenticateToken = (req, res, next) => {
         });
       }
 
-      // Verify user still exists in database
-      db.get('SELECT id, username, role FROM users WHERE id = ?', 
-        [decoded.userId], (dbErr, user) => {
-        if (dbErr || !user) {
+      try {
+        // Verify user still exists in database
+        const db = getConnection();
+        const [users] = await db.execute(
+          'SELECT id, username, role FROM users WHERE id = ?', 
+          [decoded.userId]
+        );
+
+        if (users.length === 0) {
           return res.status(403).json({
             success: false,
             message: '用户不存在'
           });
         }
 
-        req.user = user;
+        req.user = users[0];
         next();
-      });
+      } catch (dbError) {
+        console.error('Database error in auth middleware:', dbError);
+        return res.status(500).json({
+          success: false,
+          message: '数据库错误'
+        });
+      }
     });
   } catch (error) {
     console.error('Authentication middleware error:', error);

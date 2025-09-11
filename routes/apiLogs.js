@@ -1,11 +1,11 @@
 import express from 'express';
-import { db } from '../config/database.js';
+import { getConnection } from '../config/database.js';
 import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
 // GET /api/logs - 获取API请求日志
-router.get('/logs', authenticateToken, (req, res) => {
+router.get('/logs', authenticateToken, async (req, res) => {
   try {
     const {
       page = 1,
@@ -18,6 +18,8 @@ router.get('/logs', authenticateToken, (req, res) => {
     } = req.query;
 
     const offset = (parseInt(page) - 1) * parseInt(per_page);
+    const db = getConnection();
+    
     let whereClause = 'WHERE 1=1';
     let params = [];
 
@@ -58,147 +60,101 @@ router.get('/logs', authenticateToken, (req, res) => {
 
     // 如果没有指定日期范围，默认显示最近7天的记录
     if (!start_date && !end_date) {
-      whereClause += ' AND request_time >= datetime("now", "-7 days")';
+      whereClause += ' AND request_time >= DATE_SUB(NOW(), INTERVAL 7 DAY)';
     }
 
     // 获取总数
     const countQuery = `SELECT COUNT(*) as total FROM api_request_logs ${whereClause}`;
-    db.get(countQuery, params, (err, countResult) => {
-      if (err) {
-        console.error('Error counting API logs:', err);
-        return res.status(500).json({
-          success: false,
-          message: '获取日志总数失败'
-        });
-      }
+    const [countResult] = await db.execute(countQuery, params);
 
-      // 获取数据
-      const dataQuery = `
-        SELECT 
-          id, endpoint, method, status_code, success, 
-          request_body, response_body, error_message,
-          client_ip, user_agent, user_id, request_time, response_time
-        FROM api_request_logs 
-        ${whereClause}
-        ORDER BY request_time DESC 
-        LIMIT ? OFFSET ?
-      `;
+    // 获取数据
+    const dataQuery = `
+      SELECT 
+        id, endpoint, method, status_code, success, 
+        request_body, response_body, error_message,
+        client_ip, user_agent, user_id, request_time, response_time
+      FROM api_request_logs 
+      ${whereClause}
+      ORDER BY request_time DESC 
+      LIMIT ? OFFSET ?
+    `;
 
-      db.all(dataQuery, [...params, parseInt(per_page), offset], (err, rows) => {
-        if (err) {
-          console.error('Error fetching API logs:', err);
-          return res.status(500).json({
-            success: false,
-            message: '获取API日志失败'
-          });
-        }
+    const [rows] = await db.execute(dataQuery, [...params, parseInt(per_page), offset]);
 
-        res.json({
-          success: true,
-          data: rows,
-          total: countResult.total,
-          page: parseInt(page),
-          per_page: parseInt(per_page),
-          total_pages: Math.ceil(countResult.total / parseInt(per_page))
-        });
-      });
+    res.json({
+      success: true,
+      data: rows,
+      total: countResult[0].total,
+      page: parseInt(page),
+      per_page: parseInt(per_page),
+      total_pages: Math.ceil(countResult[0].total / parseInt(per_page))
     });
 
   } catch (error) {
     console.error('Error fetching API logs:', error);
     res.status(500).json({
       success: false,
-      message: '服务器错误'
+      message: '获取API日志失败'
     });
   }
 });
 
 // GET /api/logs/stats - 获取API日志统计
-router.get('/logs/stats', authenticateToken, (req, res) => {
+router.get('/logs/stats', authenticateToken, async (req, res) => {
   try {
-    const queries = [
-      // 总请求数
-      'SELECT COUNT(*) as total FROM api_request_logs',
-      // 今日请求数
-      'SELECT COUNT(*) as today FROM api_request_logs WHERE DATE(request_time) = DATE("now")',
-      // 成功请求数
-      'SELECT COUNT(*) as success FROM api_request_logs WHERE success = 1',
-      // 失败请求数
-      'SELECT COUNT(*) as failed FROM api_request_logs WHERE success = 0',
-      // 平均响应时间
-      'SELECT AVG(response_time) as avg_response_time FROM api_request_logs WHERE response_time IS NOT NULL',
-      // 最常用的端点
-      'SELECT endpoint, COUNT(*) as count FROM api_request_logs GROUP BY endpoint ORDER BY count DESC LIMIT 5',
-      // 错误统计
-      'SELECT status_code, COUNT(*) as count FROM api_request_logs WHERE success = 0 GROUP BY status_code ORDER BY count DESC LIMIT 5'
-    ];
+    const db = getConnection();
 
-    Promise.all(queries.map(query => {
-      return new Promise((resolve, reject) => {
-        db.all(query, [], (err, rows) => {
-          if (err) reject(err);
-          else resolve(rows);
-        });
-      });
-    })).then(results => {
-      res.json({
-        success: true,
-        data: {
-          total: results[0][0].total,
-          today: results[1][0].today,
-          success: results[2][0].success,
-          failed: results[3][0].failed,
-          avgResponseTime: Math.round(results[4][0].avg_response_time || 0),
-          topEndpoints: results[5],
-          errorStats: results[6]
-        }
-      });
-    }).catch(error => {
-      console.error('Error fetching API log stats:', error);
-      res.status(500).json({
-        success: false,
-        message: '获取统计数据失败'
-      });
+    const [totalResult] = await db.execute('SELECT COUNT(*) as total FROM api_request_logs');
+    const [todayResult] = await db.execute('SELECT COUNT(*) as today FROM api_request_logs WHERE DATE(request_time) = CURDATE()');
+    const [successResult] = await db.execute('SELECT COUNT(*) as success FROM api_request_logs WHERE success = 1');
+    const [failedResult] = await db.execute('SELECT COUNT(*) as failed FROM api_request_logs WHERE success = 0');
+    const [avgTimeResult] = await db.execute('SELECT AVG(response_time) as avg_response_time FROM api_request_logs WHERE response_time IS NOT NULL');
+    const [topEndpoints] = await db.execute('SELECT endpoint, COUNT(*) as count FROM api_request_logs GROUP BY endpoint ORDER BY count DESC LIMIT 5');
+    const [errorStats] = await db.execute('SELECT status_code, COUNT(*) as count FROM api_request_logs WHERE success = 0 GROUP BY status_code ORDER BY count DESC LIMIT 5');
+
+    res.json({
+      success: true,
+      data: {
+        total: totalResult[0].total,
+        today: todayResult[0].today,
+        success: successResult[0].success,
+        failed: failedResult[0].failed,
+        avgResponseTime: Math.round(avgTimeResult[0].avg_response_time || 0),
+        topEndpoints: topEndpoints,
+        errorStats: errorStats
+      }
     });
 
   } catch (error) {
     console.error('Error fetching API log stats:', error);
     res.status(500).json({
       success: false,
-      message: '服务器错误'
+      message: '获取统计数据失败'
     });
   }
 });
 
 // DELETE /api/logs/clear - 清除旧日志
-router.delete('/logs/clear', authenticateToken, (req, res) => {
+router.delete('/logs/clear', authenticateToken, async (req, res) => {
   try {
     const { days = 30 } = req.query;
+    const db = getConnection();
 
-    db.run(
-      'DELETE FROM api_request_logs WHERE request_time < datetime("now", "-" || ? || " days")',
-      [parseInt(days)],
-      function(err) {
-        if (err) {
-          console.error('Error clearing old logs:', err);
-          return res.status(500).json({
-            success: false,
-            message: '清除日志失败'
-          });
-        }
-
-        res.json({
-          success: true,
-          message: `成功清除 ${this.changes} 条超过 ${days} 天的日志记录`
-        });
-      }
+    const [result] = await db.execute(
+      'DELETE FROM api_request_logs WHERE request_time < DATE_SUB(NOW(), INTERVAL ? DAY)',
+      [parseInt(days)]
     );
+
+    res.json({
+      success: true,
+      message: `成功清除 ${result.affectedRows} 条超过 ${days} 天的日志记录`
+    });
 
   } catch (error) {
     console.error('Error clearing logs:', error);
     res.status(500).json({
       success: false,
-      message: '服务器错误'
+      message: '清除日志失败'
     });
   }
 });

@@ -43,6 +43,13 @@ npm run build
 创建 `.env` 文件并配置：
 
 ```env
+# MySQL/MariaDB 数据库配置
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=your_mysql_username
+DB_PASSWORD=your_mysql_password
+DB_NAME=flow_management_db
+
 # JWT密钥
 JWT_SECRET=your-secret-key-here
 
@@ -58,6 +65,61 @@ CLOAKING_API_BASE_URL=https://cloaking.house/api
 PORT=3001
 ```
 
+## 数据库设置
+
+### MySQL/MariaDB 安装和配置
+
+1. **安装 MySQL 或 MariaDB**:
+   ```bash
+   # Ubuntu/Debian
+   sudo apt update
+   sudo apt install mysql-server
+   
+   # CentOS/RHEL
+   sudo yum install mysql-server
+   
+   # macOS (使用 Homebrew)
+   brew install mysql
+   
+   # Windows: 下载并安装 MySQL Installer
+   ```
+
+2. **启动数据库服务**:
+   ```bash
+   # Linux
+   sudo systemctl start mysql
+   sudo systemctl enable mysql
+   
+   # macOS
+   brew services start mysql
+   ```
+
+3. **创建数据库和用户**:
+   ```sql
+   -- 登录到 MySQL
+   mysql -u root -p
+   
+   -- 创建数据库
+   CREATE DATABASE flow_management_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   
+   -- 创建用户并授权
+   CREATE USER 'flow_user'@'localhost' IDENTIFIED BY 'your_secure_password';
+   GRANT ALL PRIVILEGES ON flow_management_db.* TO 'flow_user'@'localhost';
+   FLUSH PRIVILEGES;
+   
+   -- 退出
+   EXIT;
+   ```
+
+4. **更新 .env 文件**:
+   ```env
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_USER=flow_user
+   DB_PASSWORD=your_secure_password
+   DB_NAME=flow_management_db
+   ```
+
 ## 功能特性
 
 - 🎯 流程管理 - 创建和管理斗篷流程
@@ -71,5 +133,5 @@ PORT=3001
 
 - **前端**: React + TypeScript + Tailwind CSS
 - **后端**: Node.js + Express
-- **数据库**: SQLite (内存数据库)
+- **数据库**: MySQL/MariaDB
 - **构建工具**: Vite
