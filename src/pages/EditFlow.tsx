@@ -356,6 +356,8 @@ const EditFlow: React.FC = () => {
         await waitForFiltersToLoad();
         
         console.log('Setting form data with parsed values...');
+        
+        // 使用正确的API响应键名进行数据映射
         setFormData({
           name: flow.name || '',
           url_white_page: flow.url_white_page || '',
@@ -363,13 +365,13 @@ const EditFlow: React.FC = () => {
           mode_white_page: flow.mode_white_page || 'redirect',
           mode_offer_page: flow.mode_offer_page || 'redirect',
           status: flow.status || 'active',
-          filter_countries: parsedCountries,
-          filter_devices: parsedDevices,
-          filter_os: parsedOs,
-          filter_browsers: parsedBrowsers,
-          filter_langs: parsedLangs,
-          filter_time_zones: parsedTimeZones,
-          filter_connections: parsedConnections,
+          filter_countries: flow.country_ids || [],
+          filter_devices: flow.device_ids || [],
+          filter_os: flow.os_ids || [],
+          filter_browsers: flow.browser_ids || [],
+          filter_langs: flow.language_ids || [],
+          filter_time_zones: flow.time_zone_ids || [],
+          filter_connections: flow.connection_ids || [],
           filter_cloaking_flag: Number(flow.filter_cloaking_flag) || 0,
           filter_vpn_proxy_flag: Number(flow.filter_vpn_proxy_flag) || 0,
           filter_ip_v6_flag: Number(flow.filter_ip_v6_flag) || 0,
@@ -386,28 +388,23 @@ const EditFlow: React.FC = () => {
           mode_list_time_zone: Number(flow.mode_list_time_zone) || 1,
           mode_list_connection: Number(flow.mode_list_connection) || 1,
           filter_id: Number(flow.filter_id) || 0,
-          allowed_ips: parsedAllowedIps
+          allowed_ips: flow.allowed_ips || []
         });
         
-        console.log('Form data has been set with filter values:', {
-          filter_countries: parsedCountries,
-          filter_devices: parsedDevices,
-          filter_os: parsedOs,
-          filter_browsers: parsedBrowsers,
-          filter_cloaking_flag: Number(flow.filter_cloaking_flag) || 0,
-          filter_vpn_proxy_flag: Number(flow.filter_vpn_proxy_flag) || 0
-        });
-        console.log('Final form data set:', {
-          filter_countries: parsedCountries,
-          filter_devices: parsedDevices,
-          filter_os: parsedOs,
-          filter_browsers: parsedBrowsers,
-          filter_cloaking_flag: Number(flow.filter_cloaking_flag) || 0,
-          filter_vpn_proxy_flag: Number(flow.filter_vpn_proxy_flag) || 0,
-          filter_ip_v6_flag: Number(flow.filter_ip_v6_flag) || 0,
-          filter_referer_flag: Number(flow.filter_referer_flag) || 0,
-          filter_isp_flag: Number(flow.filter_isp_flag) || 0,
-          filter_black_ip_flag: Number(flow.filter_black_ip_flag) || 0
+        console.log('Form data has been set with correct API mapping:', {
+          filter_countries: flow.country_ids,
+          filter_devices: flow.device_ids,
+          filter_os: flow.os_ids,
+          filter_browsers: flow.browser_ids,
+          filter_langs: flow.language_ids,
+          filter_time_zones: flow.time_zone_ids,
+          filter_connections: flow.connection_ids,
+          filter_cloaking_flag: Number(flow.filter_cloaking_flag),
+          filter_vpn_proxy_flag: Number(flow.filter_vpn_proxy_flag),
+          filter_ip_v6_flag: Number(flow.filter_ip_v6_flag),
+          filter_referer_flag: Number(flow.filter_referer_flag),
+          filter_isp_flag: Number(flow.filter_isp_flag),
+          filter_black_ip_flag: Number(flow.filter_black_ip_flag)
         });
       } else {
         setError(response.message || '获取流程信息失败');
