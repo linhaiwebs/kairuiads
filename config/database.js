@@ -15,6 +15,7 @@ const dbDir = path.dirname(dbPath);
 // Ensure database directory exists
 if (!fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true });
+  console.log('Created database directory:', dbDir);
 }
 
 // Remove any existing lock files
@@ -22,7 +23,7 @@ const lockFile = dbPath + '.lock';
 if (fs.existsSync(lockFile)) {
   try {
     fs.unlinkSync(lockFile);
-    console.log('Removed existing database lock file');
+    console.log('Removed existing database lock file:', lockFile);
   } catch (err) {
     console.warn('Could not remove lock file:', err.message);
   }
@@ -35,16 +36,19 @@ const shmFile = dbPath + '-shm';
   if (fs.existsSync(file)) {
     try {
       fs.unlinkSync(file);
-      console.log(`Removed existing database file: ${file}`);
+      console.log(`Removed existing database file: ${path.basename(file)}`);
     } catch (err) {
       console.warn(`Could not remove file ${file}:`, err.message);
     }
   }
 });
 
-// Create database directory if it doesn't exist
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
+// Set directory permissions
+try {
+  fs.chmodSync(dbDir, 0o755);
+  console.log('Set database directory permissions: 755');
+} catch (err) {
+  console.warn('Could not set directory permissions:', err.message);
 }
 
 const db = new sqlite3Verbose.Database(dbPath, (err) => {
