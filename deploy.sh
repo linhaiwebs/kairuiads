@@ -37,6 +37,10 @@ npm run build:production
 echo "📁 创建必要目录..."
 mkdir -p database logs
 
+# 设置数据库目录权限
+echo "🔐 设置数据库目录权限..."
+chmod -R 777 database
+
 # 检查数据库
 if [ ! -f "database/flows.db" ]; then
     echo "🗄️  初始化数据库..."
