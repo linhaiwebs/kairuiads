@@ -128,6 +128,7 @@ const EditFilter: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('🔍 [EditFilter] Form submitted');
     setError('');
     setSuccess('');
 
@@ -139,15 +140,20 @@ const EditFilter: React.FC = () => {
 
     try {
       const response = await apiService.updateFilter(parseInt(id!), formData);
+      console.log('🔍 [EditFilter] Update filter response:', response);
       if (response.success) {
         setSuccess('过滤器更新成功！');
+        console.log('🔍 [EditFilter] Filter updated successfully, navigating to /admin/filters in 2 seconds');
         setTimeout(() => {
+          console.log('🔍 [EditFilter] Executing navigation to /admin/filters');
           navigate('/admin/filters');
         }, 2000);
       } else {
+        console.log('🔍 [EditFilter] Filter update failed:', response.message);
         setError(response.message || '更新过滤器失败');
       }
     } catch (err: any) {
+      console.error('🔍 [EditFilter] Error during filter update:', err);
       setError(err.message || '网络错误，请重试');
     } finally {
       setIsLoading(false);

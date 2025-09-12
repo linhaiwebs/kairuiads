@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { authService } from '../services/authService';
 import { LogIn, Shield, Users } from 'lucide-react';
 
 const LoginPage: React.FC = () => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     username: '',
@@ -18,10 +19,14 @@ const LoginPage: React.FC = () => {
   const { login, isAuthenticated } = useAuth();
 
   useEffect(() => {
+    console.log('🔍 [LoginPage] Component mounted');
+    console.log('🔍 [LoginPage] isAuthenticated:', isAuthenticated);
     setError('');
   }, [isLogin]);
 
   if (isAuthenticated) {
+    console.log('🔍 [LoginPage] User already authenticated, redirecting to /admin');
+    console.log('🔍 [LoginPage] Current timestamp:', new Date().toISOString());
     return <Navigate to="/admin" replace />;
   }
 
@@ -32,9 +37,12 @@ const LoginPage: React.FC = () => {
 
     try {
       if (isLogin) {
+        console.log('🔍 [LoginPage] Attempting login...');
         const success = await login(formData.username, formData.password);
         if (!success) {
           setError('用户名或密码错误');
+        } else {
+          console.log('🔍 [LoginPage] Login successful, user should be redirected automatically');
         }
       } else {
         // 注册逻辑

@@ -26,22 +26,24 @@ const Dashboard: React.FC = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    console.log('🔍 [Dashboard] Component mounted, loading dashboard data');
     loadDashboardData();
   }, []);
 
   const loadDashboardData = async () => {
     try {
-      console.log('Loading dashboard data...');
+      console.log('🔍 [Dashboard] Loading dashboard data...');
       const response = await apiService.getDashboardData();
-      console.log('Dashboard response:', response);
+      console.log('🔍 [Dashboard] Dashboard response:', response);
       if (response.success) {
+        console.log('🔍 [Dashboard] Dashboard data loaded successfully:', response.data);
         setDashboardData(response.data);
       } else {
-        console.error('Dashboard API error:', response.message);
+        console.error('🔍 [Dashboard] Dashboard API error:', response.message);
         setError(response.message || '获取仪表板数据失败');
       }
     } catch (error) {
-      console.error('Dashboard fetch error:', error);
+      console.error('🔍 [Dashboard] Dashboard fetch error:', error);
       setError('网络错误，请重试');
     } finally {
       setIsLoading(false);
@@ -86,10 +88,13 @@ const Dashboard: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
+        {console.log('🔍 [Dashboard] Showing loading state')}
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
       </div>
     );
   }
+
+  console.log('🔍 [Dashboard] Rendering dashboard with data:', dashboardData);
 
   return (
     <div className="space-y-8">

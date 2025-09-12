@@ -363,6 +363,7 @@ const EditFlow: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('🔍 [EditFlow] Form submitted');
     setError('');
     setSuccess('');
 
@@ -376,18 +377,21 @@ const EditFlow: React.FC = () => {
       console.log('📤 EditFlow: Submitting form data:', formData);
       
       const response = await apiService.updateFlow(parseInt(id!), formData);
-      console.log('📥 EditFlow: Update response:', response);
+      console.log('🔍 [EditFlow] Update response:', response);
       
       if (response.success) {
         setSuccess('流程更新成功！');
+        console.log('🔍 [EditFlow] Flow updated successfully, navigating to /admin/flows in 2 seconds');
         setTimeout(() => {
+          console.log('🔍 [EditFlow] Executing navigation to /admin/flows');
           navigate('/admin/flows');
         }, 2000);
       } else {
+        console.log('🔍 [EditFlow] Flow update failed:', response.message);
         setError(response.message || '更新流程失败');
       }
     } catch (err: any) {
-      console.error('❌ EditFlow: Submit error:', err);
+      console.error('🔍 [EditFlow] Error during flow update:', err);
       setError(err.message || '网络错误，请重试');
     } finally {
       setIsLoading(false);

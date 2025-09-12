@@ -190,9 +190,11 @@ const FlowManagement: React.FC = () => {
   const handleDeleteFlow = async (flowId: number) => {
     if (confirm('确定要删除这个流程吗？')) {
       try {
+        console.log('🔍 [FlowManagement] Deleting flow:', flowId);
         setError('');
         setSuccess('');
         const response = await apiService.deleteFlow(flowId);
+        console.log('🔍 [FlowManagement] Delete response:', response);
         if (response.success) {
           setSuccess('流程删除成功');
           loadFlows();
@@ -207,9 +209,11 @@ const FlowManagement: React.FC = () => {
 
   const handleRestoreFlow = async (flowId: number) => {
     try {
+      console.log('🔍 [FlowManagement] Restoring flow:', flowId);
       setError('');
       setSuccess('');
       const response = await apiService.restoreFlow(flowId);
+      console.log('🔍 [FlowManagement] Restore response:', response);
       if (response.success) {
         setSuccess('流程恢复成功');
         loadFlows();
@@ -223,9 +227,11 @@ const FlowManagement: React.FC = () => {
 
   const handleActivateFlow = async (flowId: number) => {
     try {
+      console.log('🔍 [FlowManagement] Activating flow:', flowId);
       setError('');
       setSuccess('');
       const response = await apiService.activateFlow(flowId);
+      console.log('🔍 [FlowManagement] Activate response:', response);
       if (response.success) {
         setSuccess('流程激活成功');
         loadFlows();
@@ -239,9 +245,11 @@ const FlowManagement: React.FC = () => {
 
   const handlePauseFlow = async (flowId: number) => {
     try {
+      console.log('🔍 [FlowManagement] Pausing flow:', flowId);
       setError('');
       setSuccess('');
       const response = await apiService.pauseFlow(flowId);
+      console.log('🔍 [FlowManagement] Pause response:', response);
       if (response.success) {
         setSuccess('流程暂停成功');
         loadFlows();
@@ -255,24 +263,25 @@ const FlowManagement: React.FC = () => {
 
   const handleDownloadIntegration = async (flowId: number) => {
     try {
+      console.log('🔍 [FlowManagement] Downloading integration for flow:', flowId);
       setError('');
       setSuccess('');
       console.log(`[FlowManagement] Attempting to download integration for flow ID: ${flowId}`);
       const response = await apiService.downloadFlowIntegration(flowId);
-      console.log('[FlowManagement] Download integration API response:', response); // Add this log
+      console.log('🔍 [FlowManagement] Download integration API response:', response);
       
       if (response.success) {
         if (response.download_url) { // 修正：直接从根级别获取 download_url
           const downloadUrl = response.download_url;
-          console.log(`[FlowManagement] Download URL received: ${downloadUrl}`);
+          console.log(`🔍 [FlowManagement] Download URL received: ${downloadUrl}`);
           
           try {
             // 方法1: 直接使用window.open
             window.open(downloadUrl, '_blank');
             setSuccess('集成文件下载已开始');
-            console.log(`[FlowManagement] Download initiated via window.open: ${downloadUrl}`);
+            console.log(`🔍 [FlowManagement] Download initiated via window.open: ${downloadUrl}`);
           } catch (openError) {
-            console.error('[FlowManagement] window.open failed, trying alternative method:', openError);
+            console.error('🔍 [FlowManagement] window.open failed, trying alternative method:', openError);
             
             // 方法2: 使用隐藏链接
             const link = document.createElement('a');
@@ -284,18 +293,18 @@ const FlowManagement: React.FC = () => {
             link.click();
             document.body.removeChild(link);
             setSuccess('集成文件下载已开始');
-            console.log(`[FlowManagement] Download initiated via hidden link: ${downloadUrl}`);
+            console.log(`🔍 [FlowManagement] Download initiated via hidden link: ${downloadUrl}`);
           }
         } else {
-          console.error('[FlowManagement] Download URL missing in response data:', response);
+          console.error('🔍 [FlowManagement] Download URL missing in response data:', response);
           setError('未获取到下载链接，请检查流程状态');
         }
       } else {
-        console.error('[FlowManagement] Download integration failed:', response);
+        console.error('🔍 [FlowManagement] Download integration failed:', response);
         setError(response.message || '下载失败');
       }
     } catch (error: any) {
-      console.error('[FlowManagement] Error during download integration:', error);
+      console.error('🔍 [FlowManagement] Error during download integration:', error);
       setError('下载失败，请重试');
     }
   };

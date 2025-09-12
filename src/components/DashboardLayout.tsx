@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, Navigate, Link, useLocation } from 'react-router-dom';
+import { Outlet, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { 
   Menu, X, Home, Activity, BarChart3, MousePointer, 
@@ -12,8 +12,25 @@ const DashboardLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [flowMenuOpen, setFlowMenuOpen] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  // 调试：监控认证状态变化
+  React.useEffect(() => {
+    console.log('🔍 [DashboardLayout] Component rendered');
+    console.log('🔍 [DashboardLayout] isAuthenticated:', isAuthenticated);
+    console.log('🔍 [DashboardLayout] user:', user);
+    console.log('🔍 [DashboardLayout] current location:', location.pathname);
+  });
+
+  // 调试：监控位置变化
+  React.useEffect(() => {
+    console.log('🔍 [DashboardLayout] Location changed to:', location.pathname);
+    console.log('🔍 [DashboardLayout] Location state:', location.state);
+    console.log('🔍 [DashboardLayout] Location key:', location.key);
+  }, [location]);
 
   if (!isAuthenticated) {
+    console.log('🔍 [DashboardLayout] User not authenticated, redirecting to login');
     return <Navigate to="/admin/login" replace />;
   }
 
@@ -98,6 +115,10 @@ const DashboardLayout: React.FC = () => {
                               ? 'text-pink-400 bg-gray-800'
                               : 'text-gray-400 hover:text-white hover:bg-gray-800'
                           }`}
+                          onClick={() => {
+                            console.log('🔍 [DashboardLayout] Child navigation link clicked:', child.path);
+                            console.log('🔍 [DashboardLayout] Current location before click:', location.pathname);
+                          }}
                         >
                           <child.icon className="h-4 w-4" />
                           <span>{child.name}</span>
@@ -114,6 +135,10 @@ const DashboardLayout: React.FC = () => {
                       ? 'text-pink-400 bg-gray-800'
                       : 'text-gray-300 hover:text-white hover:bg-gray-800'
                   }`}
+                  onClick={() => {
+                    console.log('🔍 [DashboardLayout] Navigation link clicked:', item.path);
+                    console.log('🔍 [DashboardLayout] Current location before click:', location.pathname);
+                  }}
                 >
                   <item.icon className="h-5 w-5" />
                   <span className="font-medium">{item.name}</span>

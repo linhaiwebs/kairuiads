@@ -108,6 +108,7 @@ const CreateAccount: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('🔍 [CreateAccount] Form submitted');
     setError('');
     setSuccess('');
 
@@ -127,16 +128,20 @@ const CreateAccount: React.FC = () => {
         body: JSON.stringify(formData)
       });
       const data = await response.json();
+      console.log('🔍 [CreateAccount] Create account response:', data);
       if (data.success) {
         setSuccess('账号创建成功！');
+        console.log('🔍 [CreateAccount] Account created successfully, navigating to /admin/accounts in 2 seconds');
         setTimeout(() => {
+          console.log('🔍 [CreateAccount] Executing navigation to /admin/accounts');
           navigate('/admin/accounts');
         }, 2000);
       } else {
+        console.log('🔍 [CreateAccount] Account creation failed:', data.message);
         setError(data.message || '创建账号失败');
       }
     } catch (err: any) {
-      console.error('Create account error:', err);
+      console.error('🔍 [CreateAccount] Error during account creation:', err);
       setError(err.message || '创建账号失败，请重试');
     } finally {
       setIsLoading(false);

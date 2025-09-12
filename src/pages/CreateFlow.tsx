@@ -302,6 +302,7 @@ const CreateFlow: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('🔍 [CreateFlow] Form submitted');
     setIsLoading(true);
     setError('');
     setSuccess('');
@@ -332,16 +333,21 @@ const CreateFlow: React.FC = () => {
       console.log('Submitting form data:', formData);
       
       const response = await apiService.createFlow(formData);
+      console.log('🔍 [CreateFlow] Create flow response:', response);
       
       if (response.success) {
         setSuccess('流程创建成功！');
+        console.log('🔍 [CreateFlow] Flow created successfully, navigating to /admin/flows in 2 seconds');
         setTimeout(() => {
+          console.log('🔍 [CreateFlow] Executing navigation to /admin/flows');
           navigate('/admin/flows');
         }, 2000);
       } else {
+        console.log('🔍 [CreateFlow] Flow creation failed:', response.message);
         setError(response.message || '创建流程失败');
       }
     } catch (err: any) {
+      console.error('🔍 [CreateFlow] Error during flow creation:', err);
       setError(err.message || '网络错误，请重试');
     } finally {
       setIsLoading(false);

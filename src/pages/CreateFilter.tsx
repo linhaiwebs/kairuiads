@@ -103,6 +103,7 @@ const CreateFilter: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('🔍 [CreateFilter] Form submitted');
     setError('');
     setSuccess('');
 
@@ -114,15 +115,20 @@ const CreateFilter: React.FC = () => {
 
     try {
       const response = await apiService.createFilter(formData);
+      console.log('🔍 [CreateFilter] Create filter response:', response);
       if (response.success) {
         setSuccess('过滤器创建成功！');
+        console.log('🔍 [CreateFilter] Filter created successfully, navigating to /admin/filters in 2 seconds');
         setTimeout(() => {
+          console.log('🔍 [CreateFilter] Executing navigation to /admin/filters');
           navigate('/admin/filters');
         }, 2000);
       } else {
+        console.log('🔍 [CreateFilter] Filter creation failed:', response.message);
         setError(response.message || '创建过滤器失败');
       }
     } catch (err: any) {
+      console.error('🔍 [CreateFilter] Error during filter creation:', err);
       setError(err.message || '网络错误，请重试');
     } finally {
       setIsLoading(false);

@@ -156,6 +156,7 @@ const EditAccount: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('🔍 [EditAccount] Form submitted');
     setError('');
     setSuccess('');
 
@@ -175,16 +176,20 @@ const EditAccount: React.FC = () => {
         body: JSON.stringify(formData)
       });
       const data = await response.json();
+      console.log('🔍 [EditAccount] Update account response:', data);
       if (data.success) {
         setSuccess('账号更新成功！');
+        console.log('🔍 [EditAccount] Account updated successfully, navigating to /admin/accounts in 2 seconds');
         setTimeout(() => {
+          console.log('🔍 [EditAccount] Executing navigation to /admin/accounts');
           navigate('/admin/accounts');
         }, 2000);
       } else {
+        console.log('🔍 [EditAccount] Account update failed:', data.message);
         setError(data.message || '更新账号失败');
       }
     } catch (err: any) {
-      console.error('Update account error:', err);
+      console.error('🔍 [EditAccount] Error during account update:', err);
       setError(err.message || '更新账号失败，请重试');
     } finally {
       setIsLoading(false);
