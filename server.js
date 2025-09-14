@@ -22,19 +22,13 @@ if (!process.env.API_KEY && !process.env.CLOAKING_API_KEY) {
   console.warn('⚠️  WARNING: API_KEY or CLOAKING_API_KEY not found in environment variables');
 }
 
-try {
-  // Import routes
-  const landingPagesRoutes = await import('./routes/landingPages.js');
-  const authRoutes = await import('./routes/auth.js');
-  const adminRoutes = await import('./routes/admin.js');
-  const apiRoutes = await import('./routes/api.js');
-  const conversionsRoutes = await import('./routes/conversions.js');
-  const apiLogsRoutes = await import('./routes/apiLogs.js');
-  const { logApiRequest } = await import('./middleware/requestLogger.js');
-  const { initializeDatabase, closeConnection } = await import('./config/database.js');
+const app = express();
+const PORT = process.env.PORT || 3001;
 
-  const app = express();
-  const PORT = process.env.PORT || 3001;
+try {
+  // Import database and middleware
+  const { initializeDatabase, closeConnection } = await import('./config/database.js');
+  const { logApiRequest } = await import('./middleware/requestLogger.js');
 
   // Initialize database
   try {
@@ -55,7 +49,15 @@ try {
   // Apply request logging middleware to ALL routes
   app.use(logApiRequest);
 
-  // Routes - 落地页路由放在最前面
+  // Import and register routes
+  const landingPagesRoutes = await import('./routes/landingPages.js');
+  const authRoutes = await import('./routes/auth.js');
+  const adminRoutes = await import('./routes/admin.js');
+  const apiRoutes = await import('./routes/api.js');
+  const conversionsRoutes = await import('./routes/conversions.js');
+  const apiLogsRoutes = await import('./routes/apiLogs.js');
+
+  // Register routes in specific order
   app.use('/api', landingPagesRoutes.default);
   app.use('/api/auth', authRoutes.default);
   app.use('/api/admin', adminRoutes.default);
@@ -77,6 +79,12 @@ try {
 
   app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
+    console.log(`📋 Available endpoints:`);
+    console.log(`   - GET  /api/landing-pages`);
+    console.log(`   - POST /api/landing-pages`);
+    console.log(`   - GET  /api/landing-pages/:id`);
+    console.log(`   - PUT  /api/landing-pages/:id`);
+    console.log(`   - DELETE /api/landing-pages/:id`);
   });
 
   // Graceful shutdown
