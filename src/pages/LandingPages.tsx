@@ -99,33 +99,28 @@ const LandingPages: React.FC = () => {
 
   const handleDownload = async (id: number, type: 'ui' | 'source' | 'download') => {
     try {
-      const response = await fetch(`/api/landing-pages/download/${id}/${type}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-        }
-      });
-
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `landing-page-${id}-${type}`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      } else {
-        setError('文件下载失败');
-      }
+      const blob = await apiService.downloadFileBlob(`/api/landing-pages/download/${id}/${type}`);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `landing-page-${id}-${type}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
     } catch (err) {
       setError('下载失败，请重试');
     }
   };
 
-  const handlePreviewImage = (id: number) => {
-    const imageUrl = `/api/landing-pages/download/${id}/ui`;
-    setPreviewImage(imageUrl);
+  const handlePreviewImage = async (id: number) => {
+    try {
+      const blob = await apiService.downloadFileBlob(`/api/landing-pages/download/${id}/ui`);
+      const imageUrl = window.URL.createObjectURL(blob);
+      setPreviewImage(imageUrl);
+    } catch (err) {
+      setError('图片预览失败');
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -532,7 +527,12 @@ const LandingPages: React.FC = () => {
           <div className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden">
             <div className="absolute top-4 right-4 z-10">
               <button
-                onClick={() => setPreviewImage(null)}
+                onClick={() => {
+                  if (previewImage) {
+                    window.URL.revokeObjectURL(previewImage);
+                  }
+                  setPreviewImage(null);
+                }}
                 className="p-2 bg-black bg-opacity-50 text-white rounded-full hover:bg-opacity-70 transition-all duration-200"
               >
                 <X className="h-6 w-6" />
@@ -544,6 +544,9 @@ const LandingPages: React.FC = () => {
               className="max-w-full max-h-[90vh] object-contain"
               onError={() => {
                 setError('图片加载失败');
+                if (previewImage) {
+                  window.URL.revokeObjectURL(previewImage);
+                }
                 setPreviewImage(null);
               }}
             />

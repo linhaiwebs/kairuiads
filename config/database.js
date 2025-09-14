@@ -80,6 +80,9 @@ const initializeDatabase = async () => {
         ui_image VARCHAR(255),
         source_file VARCHAR(255),
         download_file VARCHAR(255),
+        original_ui_image_name VARCHAR(255),
+        original_source_file_name VARCHAR(255),
+        original_download_file_name VARCHAR(255),
         region ENUM('美国', '日本') NOT NULL,
         tech_framework ENUM('python', 'node', 'html') NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -91,6 +94,20 @@ const initializeDatabase = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     `);
     console.log('✅ landing_pages 表创建成功');
+
+    // Add new columns to existing landing_pages table if they don't exist
+    try {
+      await db.execute(`
+        ALTER TABLE landing_pages 
+        ADD COLUMN IF NOT EXISTS original_ui_image_name VARCHAR(255),
+        ADD COLUMN IF NOT EXISTS original_source_file_name VARCHAR(255),
+        ADD COLUMN IF NOT EXISTS original_download_file_name VARCHAR(255)
+      `);
+      console.log('✅ landing_pages 表字段更新成功');
+    } catch (alterError) {
+      // 如果字段已存在，忽略错误
+      console.log('ℹ️ landing_pages 表字段可能已存在');
+    }
 
     // Create flows cache table
     await db.execute(`

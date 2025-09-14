@@ -168,25 +168,16 @@ const EditLandingPage: React.FC = () => {
 
   const handleDownload = async (type: 'ui' | 'source' | 'download') => {
     try {
-      const response = await fetch(`/api/landing-pages/download/${id}/${type}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
-        }
-      });
-
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `landing-page-${id}-${type}`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      } else {
-        setError('文件下载失败');
-      }
+      const { apiService } = await import('../services/apiService');
+      const blob = await apiService.downloadFileBlob(`/api/landing-pages/download/${id}/${type}`);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `landing-page-${id}-${type}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
     } catch (err) {
       setError('下载失败，请重试');
     }

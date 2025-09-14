@@ -463,5 +463,19 @@ export const apiService = {
     });
 
     return await handleResponse(response, 'deleteConversion');
+  },
+
+  // File download with authentication
+  async downloadFileBlob(url: string) {
+    console.log('🔍 [apiService] downloadFileBlob called for URL:', url);
+    const response = await fetch(url, {
+      headers: getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Download failed: ${response.status} ${response.statusText}`);
+    }
+
+    return await response.blob();
   }
 };

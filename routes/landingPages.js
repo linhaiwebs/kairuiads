@@ -29,7 +29,8 @@ const storage = multer.diskStorage({
 const upload = multer({ 
   storage: storage,
   limits: {
-    fileSize: 500 * 1024 * 1024 // 500MB limit
+    fileSize: 500 * 1024 * 1024, // 500MB limit
+    fieldSize: 500 * 1024 * 1024 // 500MB field size limit
   },
   fileFilter: function (req, file, cb) {
     if (file.fieldname === 'ui_image') {
@@ -240,14 +241,20 @@ router.post('/landing-pages', authenticateToken, upload.fields([
     const ui_image = files && files.ui_image ? files.ui_image[0].filename : null;
     const source_file = files && files.source_file ? files.source_file[0].filename : null;
     const download_file = files && files.download_file ? files.download_file[0].filename : null;
+    
+    // 处理原始文件名
+    const original_ui_image_name = files && files.ui_image ? files.ui_image[0].originalname : null;
+    const original_source_file_name = files && files.source_file ? files.source_file[0].originalname : null;
+    const original_download_file_name = files && files.download_file ? files.download_file[0].originalname : null;
 
     // 插入数据
     const [result] = await db.execute(`
       INSERT INTO landing_pages (
         date, name, ui_image, source_file, download_file,
+        original_ui_image_name, original_source_file_name, original_download_file_name,
         region, tech_framework
-      ) VALUES (?, ?, ?, ?, ?, ?, ?)
-    `, [date, name, ui_image, source_file, download_file, region, tech_framework]);
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [date, name, ui_image, source_file, download_file, original_ui_image_name, original_source_file_name, original_download_file_name, region, tech_framework]);
 
     res.json({
       success: true,
@@ -325,6 +332,7 @@ router.put('/landing-pages/:id', authenticateToken, upload.fields([
         }
       }
       ui_image = files.ui_image[0].filename;
+      original_ui_image_name = files.ui_image[0].originalname;
     }
 
     if (files && files.source_file) {
@@ -336,6 +344,7 @@ router.put('/landing-pages/:id', authenticateToken, upload.fields([
         }
       }
       source_file = files.source_file[0].filename;
+      original_source_file_name = files.source_file[0].originalname;
     }
 
     if (files && files.download_file) {
@@ -347,15 +356,22 @@ router.put('/landing-pages/:id', authenticateToken, upload.fields([
         }
       }
       download_file = files.download_file[0].filename;
+      original_download_file_name = files.download_file[0].originalname;
     }
+
+    // 处理原始文件名变量
+    let original_ui_image_name = currentRecord.original_ui_image_name;
+    let original_source_file_name = currentRecord.original_source_file_name;
+    let original_download_file_name = currentRecord.original_download_file_name;
 
     // 更新数据
     const [result] = await db.execute(`
       UPDATE landing_pages 
       SET date = ?, name = ?, ui_image = ?, source_file = ?, download_file = ?,
+          original_ui_image_name = ?, original_source_file_name = ?, original_download_file_name = ?,
           region = ?, tech_framework = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
-    `, [date, name, ui_image, source_file, download_file, region, tech_framework, id]);
+    `, [date, name, ui_image, source_file, download_file, original_ui_image_name, original_source_file_name, original_download_file_name, region, tech_framework, id]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({
@@ -437,16 +453,20 @@ router.get('/landing-pages/download/:id/:type', authenticateToken, async (req, r
 
     const record = rows[0];
     let filename;
+    let originalName;
 
     switch (type) {
       case 'ui':
         filename = record.ui_image;
+        originalName = record.original_ui_image_name || filename;
         break;
       case 'source':
         filename = record.source_file;
+        originalName = record.original_source_file_name || filename;
         break;
       case 'download':
         filename = record.download_file;
+        originalName = record.original_download_file_name || filename;
         break;
       default:
         return res.status(400).json({
@@ -470,7 +490,7 @@ router.get('/landing-pages/download/:id/:type', authenticateToken, async (req, r
       });
     }
 
-    res.download(filePath, filename);
+    res.download(filePath, originalName);
 
   } catch (error) {
     console.error('Error downloading file:', error);
