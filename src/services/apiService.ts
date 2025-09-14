@@ -474,7 +474,10 @@ export const apiService = {
     }
     
     const response = await fetch(url, {
-      headers: getAuthHeaders(),
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Cache-Control': 'no-cache'
+      },
     });
 
     if (!response.ok) {
@@ -486,10 +489,11 @@ export const apiService = {
       } else if (response.status === 404) {
         throw new Error('文件不存在或已被删除');
       } else {
-        throw new Error(`下载失败: ${response.status} ${response.statusText}`);
+        throw new Error(`下载失败 (${response.status}): ${errorText || response.statusText}`);
       }
     }
 
+    console.log('🔍 [apiService] Download successful, creating blob...');
     return await response.blob();
   }
 };

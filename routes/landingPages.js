@@ -442,11 +442,13 @@ router.delete('/landing-pages/:id', authenticateToken, async (req, res) => {
 // GET /api/landing-pages/download/:id/:type - 下载文件
 router.get('/landing-pages/download/:id/:type', authenticateToken, async (req, res) => {
   try {
+    console.log(`[Download] 开始处理下载请求: ID=${req.params.id}, type=${req.params.type}`);
     const { id, type } = req.params;
     const db = getConnection();
     
     const [rows] = await db.execute('SELECT * FROM landing_pages WHERE id = ?', [id]);
     if (rows.length === 0) {
+      console.log(`[Download] 落地页不存在: ID=${id}`);
       return res.status(404).json({
         success: false,
         message: '落地页不存在'
@@ -454,6 +456,7 @@ router.get('/landing-pages/download/:id/:type', authenticateToken, async (req, r
     }
 
     const record = rows[0];
+    console.log(`[Download] 找到落地页记录:`, record);
     let filename;
     let originalName;
 
@@ -471,6 +474,7 @@ router.get('/landing-pages/download/:id/:type', authenticateToken, async (req, r
         originalName = record.original_download_file_name || filename;
         break;
       default:
+        console.log(`[Download] 无效的文件类型: ${type}`);
         return res.status(400).json({
           success: false,
           message: '无效的文件类型'
@@ -478,6 +482,7 @@ router.get('/landing-pages/download/:id/:type', authenticateToken, async (req, r
     }
 
     if (!filename) {
+      console.log(`[Download] 文件不存在: type=${type}, filename=${filename}`);
       return res.status(404).json({
         success: false,
         message: '文件不存在'
@@ -485,21 +490,45 @@ router.get('/landing-pages/download/:id/:type', authenticateToken, async (req, r
     }
 
     const filePath = path.join(__dirname, '../uploads', filename);
+    console.log(`[Download] 检查文件路径: ${filePath}`);
     if (!fs.existsSync(filePath)) {
+      console.log(`[Download] 文件系统中文件不存在: ${filePath}`);
       return res.status(404).json({
         success: false,
         message: '文件不存在'
       });
     }
 
-    res.download(filePath, originalName);
+    console.log(`[Download] 准备下载文件: ${originalName}`);
+    
+    // 设置正确的响应头以支持中文文件名
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(originalName)}`);
+    res.setHeader('Cache-Control', 'no-cache');
+    
+    // 发送文件
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        console.error(`[Download] 文件发送失败:`, err);
+        if (!res.headersSent) {
+          res.status(500).json({
+            success: false,
+            message: '文件发送失败'
+          });
+        }
+      } else {
+        console.log(`[Download] 文件发送成功: ${originalName}`);
+      }
+    });
 
   } catch (error) {
     console.error('Error downloading file:', error);
-    res.status(500).json({
-      success: false,
-      message: '下载文件失败'
-    });
+    if (!res.headersSent) {
+      res.status(500).json({
+        success: false,
+        message: '下载文件失败'
+      });
+    }
   }
 });
 

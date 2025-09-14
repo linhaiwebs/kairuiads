@@ -105,7 +105,12 @@ const LandingPages: React.FC = () => {
       setSuccess('');
       
       console.log(`开始下载文件: ID=${id}, type=${type}`);
+      
+      // 显示下载开始提示
+      setSuccess('正在准备下载文件...');
+      
       const blob = await apiService.downloadFileBlob(`/api/landing-pages/download/${id}/${type}`);
+      console.log(`文件下载成功，Blob大小: ${blob.size} bytes`);
       
       // 获取文件名
       const landingPage = landingPages.find(lp => lp.id === id);
@@ -114,21 +119,24 @@ const LandingPages: React.FC = () => {
       if (landingPage) {
         switch (type) {
           case 'ui':
-            filename = landingPage.original_ui_image_name || `ui-image-${id}`;
+            filename = landingPage.original_ui_image_name || landingPage.ui_image || `ui-image-${id}`;
             break;
           case 'source':
-            filename = landingPage.original_source_file_name || `source-file-${id}`;
+            filename = landingPage.original_source_file_name || landingPage.source_file || `source-file-${id}`;
             break;
           case 'download':
-            filename = landingPage.original_download_file_name || `download-file-${id}`;
+            filename = landingPage.original_download_file_name || landingPage.download_file || `download-file-${id}`;
             break;
         }
       }
+      
+      console.log(`使用文件名: ${filename}`);
       
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = filename;
+      a.style.display = 'none';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -138,7 +146,7 @@ const LandingPages: React.FC = () => {
       console.log(`文件下载成功: ${filename}`);
     } catch (err) {
       console.error('下载失败:', err);
-      setError(`下载失败: ${err.message || '请重试'}`);
+      setError(`下载失败: ${err.message || '网络错误，请重试'}`);
     }
   };
 
@@ -566,9 +574,9 @@ const LandingPages: React.FC = () => {
       {/* Image Preview Modal */}
       {previewImage && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
-          <div className="relative max-w-6xl max-h-[95vh] bg-white rounded-xl shadow-2xl overflow-hidden">
+          <div className="relative max-w-6xl w-full max-h-[95vh] bg-white rounded-xl shadow-2xl flex flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200">
+            <div className="flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200 flex-shrink-0">
               <h3 className="text-lg font-semibold text-gray-900">UI图片预览</h3>
               <button
                 onClick={() => {
@@ -582,21 +590,30 @@ const LandingPages: React.FC = () => {
                 <X className="h-6 w-6" />
               </button>
             </div>
-            <img
-              src={previewImage}
-              alt="UI预览"
-              className="w-full h-auto max-h-[80vh] object-contain bg-gray-100"
-              onError={() => {
-                setError('图片加载失败');
-                if (previewImage) {
-                  window.URL.revokeObjectURL(previewImage);
-                }
-                setPreviewImage(null);
-              }}
-            />
+            
+            {/* 可滚动的图片容器 */}
+            <div className="flex-grow overflow-auto bg-gray-100 p-4">
+              <div className="flex items-start justify-center min-h-full">
+                <img
+                  src={previewImage}
+                  alt="UI预览"
+                  className="max-w-none shadow-lg rounded-lg"
+                  onError={() => {
+                    setError('图片加载失败');
+                    if (previewImage) {
+                      window.URL.revokeObjectURL(previewImage);
+                    }
+                    setPreviewImage(null);
+                  }}
+                />
+              </div>
+            </div>
+            
             {/* Footer */}
-            <div className="p-4 bg-gray-50 border-t border-gray-200 text-center">
-              <p className="text-sm text-gray-600">点击右上角关闭按钮或点击背景区域关闭预览</p>
+            <div className="p-4 bg-gray-50 border-t border-gray-200 text-center flex-shrink-0">
+              <p className="text-sm text-gray-600">
+                图片可滚动查看 • 点击右上角关闭按钮或点击背景区域关闭预览
+              </p>
             </div>
           </div>
         </div>
