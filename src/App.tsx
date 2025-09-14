@@ -17,6 +17,9 @@ import ConversionRecords from './pages/ConversionRecords';
 import FilterManagement from './pages/FilterManagement';
 import CreateFilter from './pages/CreateFilter';
 import EditFilter from './pages/EditFilter';
+import LandingPageManagement from './pages/LandingPageManagement';
+import CreateLandingPage from './pages/CreateLandingPage';
+import EditLandingPage from './pages/EditLandingPage';
 import ApiRequestLogs from './pages/ApiRequestLogs';
 import EditFlow from './pages/EditFlow';
 import './index.css';
@@ -70,6 +73,9 @@ function App() {
             <Route path="filters" element={<FilterManagement />} />
             <Route path="filters/create" element={<CreateFilter />} />
             <Route path="filters/edit/:id" element={<EditFilter />} />
+            <Route path="landing-pages" element={<LandingPageManagement />} />
+            <Route path="landing-pages/create" element={<CreateLandingPage />} />
+            <Route path="landing-pages/edit/:id" element={<EditLandingPage />} />
             <Route path="logs" element={<ApiRequestLogs />} />
           </Route>
           <Route path="/" element={

@@ -144,6 +144,28 @@ const initializeDatabase = async () => {
     `);
     console.log('✅ api_request_logs 表创建成功');
 
+    // Create landing_pages table
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS landing_pages (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        date DATE NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        ui_image VARCHAR(500),
+        source_file VARCHAR(500),
+        download_file VARCHAR(500),
+        region ENUM('美国', '日本') NOT NULL,
+        tech_framework ENUM('python', 'node', 'html') NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX idx_date (date),
+        INDEX idx_name (name),
+        INDEX idx_region (region),
+        INDEX idx_tech_framework (tech_framework),
+        INDEX idx_created_at (created_at)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+    console.log('✅ landing_pages 表创建成功');
+
     // Create default categories if not exists
     const [categoryRows] = await db.execute('SELECT COUNT(*) as count FROM account_categories');
     if (categoryRows[0].count === 0) {
