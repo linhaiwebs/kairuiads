@@ -24,12 +24,12 @@ if (!process.env.API_KEY && !process.env.CLOAKING_API_KEY) {
 
 try {
   // Import routes
+  const landingPagesRoutes = await import('./routes/landingPages.js');
   const authRoutes = await import('./routes/auth.js');
   const adminRoutes = await import('./routes/admin.js');
   const apiRoutes = await import('./routes/api.js');
   const conversionsRoutes = await import('./routes/conversions.js');
   const apiLogsRoutes = await import('./routes/apiLogs.js');
-  const landingPagesRoutes = await import('./routes/landingPages.js');
   const { logApiRequest } = await import('./middleware/requestLogger.js');
   const { initializeDatabase, closeConnection } = await import('./config/database.js');
 
@@ -55,7 +55,7 @@ try {
   // Apply request logging middleware to ALL routes
   app.use(logApiRequest);
 
-  // Routes
+  // Routes - 落地页路由放在最前面
   app.use('/api', landingPagesRoutes.default);
   app.use('/api/auth', authRoutes.default);
   app.use('/api/admin', adminRoutes.default);
