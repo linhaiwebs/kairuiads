@@ -138,8 +138,8 @@ const LandingPageManagement: React.FC = () => {
   };
 
   const handleDownloadFile = (id: number, type: 'ui' | 'source' | 'download') => {
-    const url = `/api/landing-pages/download/${id}/${type}`;
-    window.open(url, '_blank');
+    // 暂时显示提示信息
+    alert(`下载功能暂未完全实现。文件类型: ${type}, ID: ${id}`);
   };
 
   return (

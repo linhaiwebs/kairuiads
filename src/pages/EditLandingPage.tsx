@@ -161,29 +161,24 @@ const EditLandingPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('date', formData.date);
-      formDataToSend.append('name', formData.name);
-      formDataToSend.append('region', formData.region);
-      formDataToSend.append('tech_framework', formData.tech_framework);
-
-      // 添加文件（只有选择了新文件才上传）
-      if (files.ui_image) {
-        formDataToSend.append('ui_image', files.ui_image);
-      }
-      if (files.source_file) {
-        formDataToSend.append('source_file', files.source_file);
-      }
-      if (files.download_file) {
-        formDataToSend.append('download_file', files.download_file);
-      }
+      // 暂时使用JSON格式，不上传实际文件
+      const requestData = {
+        date: formData.date,
+        name: formData.name,
+        region: formData.region,
+        tech_framework: formData.tech_framework,
+        ui_image: files.ui_image ? files.ui_image.name : null,
+        source_file: files.source_file ? files.source_file.name : null,
+        download_file: files.download_file ? files.download_file.name : null
+      };
 
       const response = await fetch(`/api/landing-pages/${id}`, {
         method: 'PUT',
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
         },
-        body: formDataToSend
+        body: JSON.stringify(requestData)
       });
 
       const data = await response.json();
@@ -216,8 +211,8 @@ const EditLandingPage: React.FC = () => {
   };
 
   const handleDownloadFile = (type: 'ui' | 'source' | 'download') => {
-    const url = `/api/landing-pages/download/${id}/${type}`;
-    window.open(url, '_blank');
+    // 暂时显示提示信息
+    alert(`下载功能暂未完全实现。文件类型: ${type}, ID: ${id}`);
   };
 
   if (loadingData) {

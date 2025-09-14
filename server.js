@@ -67,6 +67,7 @@ try {
   app.get('*', (req, res) => {
     // If it's an API request that wasn't handled by previous routes, return 404
     if (req.path.startsWith('/api/')) {
+      console.log('🔍 [Server] Unhandled API request:', req.method, req.path);
       return res.status(404).json({ error: 'API endpoint not found' });
     }
     
