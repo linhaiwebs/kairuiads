@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { apiService } from '../services/apiService';
 import { 
   Search, Plus, Eye, Edit, Trash2, Download, RefreshCw, 
   Filter, Calendar, Globe, Code, Image, FileText,
@@ -32,6 +33,7 @@ const LandingPages: React.FC = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
 
   const perPage = 10;
 
@@ -99,27 +101,62 @@ const LandingPages: React.FC = () => {
 
   const handleDownload = async (id: number, type: 'ui' | 'source' | 'download') => {
     try {
+      setError('');
+      setSuccess('');
+      
+      console.log(`开始下载文件: ID=${id}, type=${type}`);
       const blob = await apiService.downloadFileBlob(`/api/landing-pages/download/${id}/${type}`);
+      
+      // 获取文件名
+      const landingPage = landingPages.find(lp => lp.id === id);
+      let filename = `landing-page-${id}-${type}`;
+      
+      if (landingPage) {
+        switch (type) {
+          case 'ui':
+            filename = landingPage.original_ui_image_name || `ui-image-${id}`;
+            break;
+          case 'source':
+            filename = landingPage.original_source_file_name || `source-file-${id}`;
+            break;
+          case 'download':
+            filename = landingPage.original_download_file_name || `download-file-${id}`;
+            break;
+        }
+      }
+      
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `landing-page-${id}-${type}`;
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
+      
+      setSuccess(`文件下载成功: ${filename}`);
+      console.log(`文件下载成功: ${filename}`);
     } catch (err) {
-      setError('下载失败，请重试');
+      console.error('下载失败:', err);
+      setError(`下载失败: ${err.message || '请重试'}`);
     }
   };
 
   const handlePreviewImage = async (id: number) => {
+    setPreviewLoading(true);
+    setError('');
+    
     try {
+      console.log(`开始预览图片: ID=${id}`);
       const blob = await apiService.downloadFileBlob(`/api/landing-pages/download/${id}/ui`);
       const imageUrl = window.URL.createObjectURL(blob);
       setPreviewImage(imageUrl);
+      console.log('图片预览成功');
     } catch (err) {
-      setError('图片预览失败');
+      console.error('图片预览失败:', err);
+      setError(`图片预览失败: ${err.message || '请重试'}`);
+    } finally {
+      setPreviewLoading(false);
     }
   };
 
@@ -395,10 +432,15 @@ const LandingPages: React.FC = () => {
                       {landingPage.ui_image ? (
                         <button
                           onClick={() => handlePreviewImage(landingPage.id)}
-                          className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-all duration-200"
+                          disabled={previewLoading}
+                          className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                           title="预览UI图片"
                         >
-                          <Image className="h-5 w-5" />
+                          {previewLoading ? (
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                          ) : (
+                            <Image className="h-5 w-5" />
+                          )}
                         </button>
                       ) : (
                         <span className="text-gray-400 text-sm">未上传</span>
@@ -524,8 +566,10 @@ const LandingPages: React.FC = () => {
       {/* Image Preview Modal */}
       {previewImage && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
-          <div className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden">
-            <div className="absolute top-4 right-4 z-10">
+          <div className="relative max-w-6xl max-h-[95vh] bg-white rounded-xl shadow-2xl overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">UI图片预览</h3>
               <button
                 onClick={() => {
                   if (previewImage) {
@@ -533,7 +577,7 @@ const LandingPages: React.FC = () => {
                   }
                   setPreviewImage(null);
                 }}
-                className="p-2 bg-black bg-opacity-50 text-white rounded-full hover:bg-opacity-70 transition-all duration-200"
+                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200"
               >
                 <X className="h-6 w-6" />
               </button>
@@ -541,7 +585,7 @@ const LandingPages: React.FC = () => {
             <img
               src={previewImage}
               alt="UI预览"
-              className="max-w-full max-h-[90vh] object-contain"
+              className="w-full h-auto max-h-[80vh] object-contain bg-gray-100"
               onError={() => {
                 setError('图片加载失败');
                 if (previewImage) {
@@ -550,6 +594,10 @@ const LandingPages: React.FC = () => {
                 setPreviewImage(null);
               }}
             />
+            {/* Footer */}
+            <div className="p-4 bg-gray-50 border-t border-gray-200 text-center">
+              <p className="text-sm text-gray-600">点击右上角关闭按钮或点击背景区域关闭预览</p>
+            </div>
           </div>
         </div>
       )}

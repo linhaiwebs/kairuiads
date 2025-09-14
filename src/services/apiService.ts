@@ -468,12 +468,26 @@ export const apiService = {
   // File download with authentication
   async downloadFileBlob(url: string) {
     console.log('🔍 [apiService] downloadFileBlob called for URL:', url);
+    const token = localStorage.getItem('auth_token');
+    if (!token) {
+      throw new Error('未找到认证令牌，请重新登录');
+    }
+    
     const response = await fetch(url, {
       headers: getAuthHeaders(),
     });
 
     if (!response.ok) {
-      throw new Error(`Download failed: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('🔍 [apiService] Download failed:', response.status, response.statusText, errorText);
+      
+      if (response.status === 401) {
+        throw new Error('认证失败，请重新登录');
+      } else if (response.status === 404) {
+        throw new Error('文件不存在或已被删除');
+      } else {
+        throw new Error(`下载失败: ${response.status} ${response.statusText}`);
+      }
     }
 
     return await response.blob();

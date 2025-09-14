@@ -143,6 +143,7 @@ router.get('/landing-pages', authenticateToken, async (req, res) => {
     const dataQuery = `
       SELECT 
         id, date, name, ui_image, source_file, download_file,
+        original_ui_image_name, original_source_file_name, original_download_file_name,
         region, tech_framework, created_at, updated_at
       FROM landing_pages 
       ${whereClause}
@@ -322,6 +323,9 @@ router.put('/landing-pages/:id', authenticateToken, upload.fields([
     let ui_image = currentRecord.ui_image;
     let source_file = currentRecord.source_file;
     let download_file = currentRecord.download_file;
+    let original_ui_image_name = currentRecord.original_ui_image_name;
+    let original_source_file_name = currentRecord.original_source_file_name;
+    let original_download_file_name = currentRecord.original_download_file_name;
 
     if (files && files.ui_image) {
       // 删除旧文件
@@ -332,6 +336,7 @@ router.put('/landing-pages/:id', authenticateToken, upload.fields([
         }
       }
       ui_image = files.ui_image[0].filename;
+      original_ui_image_name = files.ui_image[0].originalname;
       original_ui_image_name = files.ui_image[0].originalname;
     }
 
@@ -345,6 +350,7 @@ router.put('/landing-pages/:id', authenticateToken, upload.fields([
       }
       source_file = files.source_file[0].filename;
       original_source_file_name = files.source_file[0].originalname;
+      original_source_file_name = files.source_file[0].originalname;
     }
 
     if (files && files.download_file) {
@@ -357,12 +363,8 @@ router.put('/landing-pages/:id', authenticateToken, upload.fields([
       }
       download_file = files.download_file[0].filename;
       original_download_file_name = files.download_file[0].originalname;
+      original_download_file_name = files.download_file[0].originalname;
     }
-
-    // 处理原始文件名变量
-    let original_ui_image_name = currentRecord.original_ui_image_name;
-    let original_source_file_name = currentRecord.original_source_file_name;
-    let original_download_file_name = currentRecord.original_download_file_name;
 
     // 更新数据
     const [result] = await db.execute(`
