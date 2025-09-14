@@ -48,7 +48,6 @@ try {
   // Middleware
   app.use(cors());
   app.use(express.json());
-  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
   app.use(express.static(path.join(__dirname, 'dist')));
 
   // Apply request logging middleware to ALL routes
