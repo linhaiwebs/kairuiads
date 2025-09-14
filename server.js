@@ -31,6 +31,7 @@ const startServer = async () => {
     const conversionsRoutes = await import('./routes/conversions.js');
     const apiLogsRoutes = await import('./routes/apiLogs.js');
     const landingPagesRoutes = await import('./routes/landingPages.js');
+    const landingPagesRoutes = await import('./routes/landingPages.js');
     const { logApiRequest } = await import('./middleware/requestLogger.js');
     const { initializeDatabase, closeConnection } = await import('./config/database.js');
 

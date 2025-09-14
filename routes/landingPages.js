@@ -163,7 +163,7 @@ router.post('/landing-pages', authenticateToken, upload.fields([
 ]), async (req, res) => {
   try {
     const { date, name, region, tech_framework } = req.body;
-    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    const files = req.files;
     const db = getConnection();
 
     // 验证必填字段
@@ -191,9 +191,9 @@ router.post('/landing-pages', authenticateToken, upload.fields([
     }
 
     // 处理文件路径
-    const ui_image = files.ui_image ? files.ui_image[0].filename : null;
-    const source_file = files.source_file ? files.source_file[0].filename : null;
-    const download_file = files.download_file ? files.download_file[0].filename : null;
+    const ui_image = files && files.ui_image ? files.ui_image[0].filename : null;
+    const source_file = files && files.source_file ? files.source_file[0].filename : null;
+    const download_file = files && files.download_file ? files.download_file[0].filename : null;
 
     // 插入数据
     const [result] = await db.execute(`
@@ -227,7 +227,7 @@ router.put('/landing-pages/:id', authenticateToken, upload.fields([
   try {
     const { id } = req.params;
     const { date, name, region, tech_framework } = req.body;
-    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    const files = req.files;
     const db = getConnection();
 
     // 验证必填字段
@@ -270,7 +270,7 @@ router.put('/landing-pages/:id', authenticateToken, upload.fields([
     let source_file = currentRecord.source_file;
     let download_file = currentRecord.download_file;
 
-    if (files.ui_image) {
+    if (files && files.ui_image) {
       // 删除旧文件
       if (currentRecord.ui_image) {
         const oldPath = path.join(__dirname, '../uploads', currentRecord.ui_image);
@@ -281,7 +281,7 @@ router.put('/landing-pages/:id', authenticateToken, upload.fields([
       ui_image = files.ui_image[0].filename;
     }
 
-    if (files.source_file) {
+    if (files && files.source_file) {
       // 删除旧文件
       if (currentRecord.source_file) {
         const oldPath = path.join(__dirname, '../uploads', currentRecord.source_file);
@@ -292,7 +292,7 @@ router.put('/landing-pages/:id', authenticateToken, upload.fields([
       source_file = files.source_file[0].filename;
     }
 
-    if (files.download_file) {
+    if (files && files.download_file) {
       // 删除旧文件
       if (currentRecord.download_file) {
         const oldPath = path.join(__dirname, '../uploads', currentRecord.download_file);

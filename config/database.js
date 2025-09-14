@@ -104,6 +104,18 @@ const initializeDatabase = async () => {
     `);
     console.log('✅ flows_cache 表创建成功');
 
+    // Create flows cache table
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS flows_cache (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        flow_id INT UNIQUE NOT NULL,
+        data TEXT NOT NULL,
+        last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_flow_id (flow_id)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+    console.log('✅ flows_cache 表创建成功');
+
     // Create account categories table
     await db.execute(`
       CREATE TABLE IF NOT EXISTS account_categories (
