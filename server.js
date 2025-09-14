@@ -29,6 +29,7 @@ try {
   const apiRoutes = await import('./routes/api.js');
   const conversionsRoutes = await import('./routes/conversions.js');
   const apiLogsRoutes = await import('./routes/apiLogs.js');
+  const landingPagesRoutes = await import('./routes/landingPages.js');
   const { logApiRequest } = await import('./middleware/requestLogger.js');
   const { initializeDatabase, closeConnection } = await import('./config/database.js');
 
@@ -60,6 +61,7 @@ try {
   app.use('/api', apiRoutes.default);
   app.use('/api', conversionsRoutes.default);
   app.use('/api', apiLogsRoutes.default);
+  app.use('/api', landingPagesRoutes.default);
 
   // Catch-all route handler
   app.get('*', (req, res) => {
