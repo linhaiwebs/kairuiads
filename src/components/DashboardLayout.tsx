@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { 
   Menu, X, Home, Activity, BarChart3, MousePointer, 
   LogOut, Settings, Shield, ChevronDown, ChevronRight, Users, TrendingUp, Filter,
-  Database
+  Database, Globe
 } from 'lucide-react';
 
 const DashboardLayout: React.FC = () => {
@@ -52,6 +52,17 @@ const DashboardLayout: React.FC = () => {
     { path: '/admin/conversions', name: '转化记录', icon: TrendingUp },
     { path: '/admin/filters', name: '过滤列表', icon: Filter },
     { path: '/admin/logs', name: 'API日志', icon: Database },
+    {
+      name: '落地页',
+      icon: Globe,
+      isParent: true,
+      isOpen: true,
+      toggle: () => {},
+      children: [
+        { path: '/admin/landing-pages', name: '落地页列表', icon: Globe },
+        { path: '/admin/landing-pages/create', name: '创建落地页', icon: Globe },
+      ]
+    },
     {
       name: '账号管理',
       icon: Users,

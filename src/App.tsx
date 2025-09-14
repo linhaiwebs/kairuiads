@@ -19,6 +19,9 @@ import CreateFilter from './pages/CreateFilter';
 import EditFilter from './pages/EditFilter';
 import ApiRequestLogs from './pages/ApiRequestLogs';
 import EditFlow from './pages/EditFlow';
+import LandingPages from './pages/LandingPages';
+import CreateLandingPage from './pages/CreateLandingPage';
+import EditLandingPage from './pages/EditLandingPage';
 import './index.css';
 
 // 调试组件：监控路由变化
@@ -71,6 +74,9 @@ function App() {
             <Route path="filters/create" element={<CreateFilter />} />
             <Route path="filters/edit/:id" element={<EditFilter />} />
             <Route path="logs" element={<ApiRequestLogs />} />
+            <Route path="landing-pages" element={<LandingPages />} />
+            <Route path="landing-pages/create" element={<CreateLandingPage />} />
+            <Route path="landing-pages/edit/:id" element={<EditLandingPage />} />
           </Route>
           <Route path="/" element={
             <>

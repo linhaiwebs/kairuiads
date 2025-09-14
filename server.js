@@ -29,6 +29,7 @@ try {
   const apiRoutes = await import('./routes/api.js');
   const conversionsRoutes = await import('./routes/conversions.js');
   const apiLogsRoutes = await import('./routes/apiLogs.js');
+  const landingPagesRoutes = await import('./routes/landingPages.js');
   const { logApiRequest } = await import('./middleware/requestLogger.js');
   const { initializeDatabase, closeConnection } = await import('./config/database.js');
 
@@ -54,6 +55,7 @@ try {
   app.use(logApiRequest);
 
   // Routes
+  app.use('/api', landingPagesRoutes.default);
   app.use('/api/auth', authRoutes.default);
   app.use('/api/admin', adminRoutes.default);
   app.use('/api', apiRoutes.default);
