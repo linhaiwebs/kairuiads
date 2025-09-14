@@ -1,6 +1,37 @@
 import express from 'express';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
 import { getConnection } from '../config/database.js';
 import { authenticateToken } from '../middleware/auth.js';
+
+// 确保uploads目录存在
+const uploadsDir = 'uploads';
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// 配置multer用于文件上传
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadsDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ 
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024 // 10MB
+  },
+  fileFilter: (req, file, cb) => {
+    // 允许所有文件类型
+    cb(null, true);
+  }
+});
 
 const router = express.Router();
 
@@ -118,11 +149,17 @@ router.get('/landing-pages/:id', authenticateToken, async (req, res) => {
 });
 
 // POST /api/landing-pages - 创建新落地页
-router.post('/landing-pages', authenticateToken, async (req, res) => {
+router.post('/landing-pages', authenticateToken, upload.fields([
+  { name: 'ui_image', maxCount: 1 },
+  { name: 'source_file', maxCount: 1 },
+  { name: 'download_file', maxCount: 1 }
+]), async (req, res) => {
   console.log('🔍 [LandingPages] POST /landing-pages called');
   console.log('🔍 [LandingPages] Request body:', req.body);
+  console.log('🔍 [LandingPages] Request files:', req.files);
   try {
     const { date, name, region, tech_framework, ui_image, source_file, download_file } = req.body;
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     const db = getConnection();
 
     // 验证必填字段
@@ -149,6 +186,11 @@ router.post('/landing-pages', authenticateToken, async (req, res) => {
       });
     }
 
+    // 处理上传的文件
+    const ui_image = files?.ui_image?.[0]?.filename || null;
+    const source_file = files?.source_file?.[0]?.filename || null;
+    const download_file = files?.download_file?.[0]?.filename || null;
+
     // 插入数据
     const [result] = await db.execute(`
       INSERT INTO landing_pages (
@@ -173,11 +215,16 @@ router.post('/landing-pages', authenticateToken, async (req, res) => {
 });
 
 // PUT /api/landing-pages/:id - 更新落地页
-router.put('/landing-pages/:id', authenticateToken, async (req, res) => {
+router.put('/landing-pages/:id', authenticateToken, upload.fields([
+  { name: 'ui_image', maxCount: 1 },
+  { name: 'source_file', maxCount: 1 },
+  { name: 'download_file', maxCount: 1 }
+]), async (req, res) => {
   console.log('🔍 [LandingPages] PUT /landing-pages/:id called for ID:', req.params.id);
   try {
     const { id } = req.params;
     const { date, name, region, tech_framework, ui_image, source_file, download_file } = req.body;
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     const db = getConnection();
 
     // 验证必填字段
@@ -215,10 +262,33 @@ router.put('/landing-pages/:id', authenticateToken, async (req, res) => {
 
     const currentRecord = currentRows[0];
 
-    // 使用新数据或保持原有数据
-    const finalUiImage = ui_image || currentRecord.ui_image;
-    const finalSourceFile = source_file || currentRecord.source_file;
-    const finalDownloadFile = download_file || currentRecord.download_file;
+    // 处理文件更新
+    const finalUiImage = files?.ui_image?.[0]?.filename || currentRecord.ui_image;
+    const finalSourceFile = files?.source_file?.[0]?.filename || currentRecord.source_file;
+    const finalDownloadFile = files?.download_file?.[0]?.filename || currentRecord.download_file;
+
+    // 如果有新文件上传，删除旧文件
+    if (files?.ui_image?.[0] && currentRecord.ui_image) {
+      try {
+        fs.unlinkSync(path.join(uploadsDir, currentRecord.ui_image));
+      } catch (err) {
+        console.log('旧UI图片文件删除失败:', err.message);
+      }
+    }
+    if (files?.source_file?.[0] && currentRecord.source_file) {
+      try {
+        fs.unlinkSync(path.join(uploadsDir, currentRecord.source_file));
+      } catch (err) {
+        console.log('旧源文件删除失败:', err.message);
+      }
+    }
+    if (files?.download_file?.[0] && currentRecord.download_file) {
+      try {
+        fs.unlinkSync(path.join(uploadsDir, currentRecord.download_file));
+      } catch (err) {
+        console.log('旧下载文件删除失败:', err.message);
+      }
+    }
 
     // 更新数据
     const [result] = await db.execute(`
@@ -256,14 +326,41 @@ router.delete('/landing-pages/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
     const db = getConnection();
     
-    // 删除数据库记录
-    const [result] = await db.execute('DELETE FROM landing_pages WHERE id = ?', [id]);
-    
-    if (result.affectedRows === 0) {
+    // 获取要删除的记录信息
+    const [rows] = await db.execute('SELECT * FROM landing_pages WHERE id = ?', [id]);
+    if (rows.length === 0) {
       return res.status(404).json({
         success: false,
         message: '落地页不存在'
       });
+    }
+
+    const record = rows[0];
+
+    // 删除数据库记录
+    const [result] = await db.execute('DELETE FROM landing_pages WHERE id = ?', [id]);
+    
+    // 删除相关文件
+    if (record.ui_image) {
+      try {
+        fs.unlinkSync(path.join(uploadsDir, record.ui_image));
+      } catch (err) {
+        console.log('UI图片文件删除失败:', err.message);
+      }
+    }
+    if (record.source_file) {
+      try {
+        fs.unlinkSync(path.join(uploadsDir, record.source_file));
+      } catch (err) {
+        console.log('源文件删除失败:', err.message);
+      }
+    }
+    if (record.download_file) {
+      try {
+        fs.unlinkSync(path.join(uploadsDir, record.download_file));
+      } catch (err) {
+        console.log('下载文件删除失败:', err.message);
+      }
     }
     
     res.json({
@@ -285,13 +382,54 @@ router.get('/landing-pages/download/:id/:type', authenticateToken, async (req, r
   console.log('🔍 [LandingPages] GET /landing-pages/download called for ID:', req.params.id, 'type:', req.params.type);
   try {
     const { id, type } = req.params;
+    const db = getConnection();
     
-    // 简化版本：返回文件信息而不是实际文件
-    res.json({
-      success: true,
-      message: '文件下载功能暂未实现',
-      data: { id, type }
-    });
+    // 获取落地页记录
+    const [rows] = await db.execute('SELECT * FROM landing_pages WHERE id = ?', [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: '落地页不存在'
+      });
+    }
+
+    const record = rows[0];
+    let filename = null;
+
+    switch (type) {
+      case 'ui':
+        filename = record.ui_image;
+        break;
+      case 'source':
+        filename = record.source_file;
+        break;
+      case 'download':
+        filename = record.download_file;
+        break;
+      default:
+        return res.status(400).json({
+          success: false,
+          message: '无效的文件类型'
+        });
+    }
+
+    if (!filename) {
+      return res.status(404).json({
+        success: false,
+        message: '文件不存在'
+      });
+    }
+
+    const filePath = path.join(uploadsDir, filename);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({
+        success: false,
+        message: '文件不存在于服务器'
+      });
+    }
+
+    // 发送文件
+    res.download(filePath, filename);
 
   } catch (error) {
     console.error('🔍 [LandingPages] Error downloading file:', error);

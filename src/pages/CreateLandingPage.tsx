@@ -101,24 +101,29 @@ const CreateLandingPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // 暂时使用JSON格式，不上传实际文件
-      const requestData = {
-        date: formData.date,
-        name: formData.name,
-        region: formData.region,
-        tech_framework: formData.tech_framework,
-        ui_image: files.ui_image ? files.ui_image.name : null,
-        source_file: files.source_file ? files.source_file.name : null,
-        download_file: files.download_file ? files.download_file.name : null
-      };
+      // 使用FormData上传文件
+      const formDataToSend = new FormData();
+      formDataToSend.append('date', formData.date);
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('region', formData.region);
+      formDataToSend.append('tech_framework', formData.tech_framework);
+      
+      if (files.ui_image) {
+        formDataToSend.append('ui_image', files.ui_image);
+      }
+      if (files.source_file) {
+        formDataToSend.append('source_file', files.source_file);
+      }
+      if (files.download_file) {
+        formDataToSend.append('download_file', files.download_file);
+      }
 
       const response = await fetch('/api/landing-pages', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
         },
-        body: JSON.stringify(requestData)
+        body: formDataToSend
       });
 
       const data = await response.json();

@@ -62,6 +62,7 @@ try {
   app.use('/api', conversionsRoutes.default);
   app.use('/api', apiLogsRoutes.default);
   app.use('/api', landingPagesRoutes.default);
+  app.use('/api', landingPagesRoutes.default);
 
   // Catch-all route handler
   app.get('*', (req, res) => {
