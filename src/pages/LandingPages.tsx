@@ -510,6 +510,30 @@ const LandingPages: React.FC = () => {
         )}
       </div>
     </div>
+      {/* Image Preview Modal */}
+      {previewImage && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+          <div className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden">
+            <div className="absolute top-4 right-4 z-10">
+              <button
+                onClick={() => setPreviewImage(null)}
+                className="p-2 bg-black bg-opacity-50 text-white rounded-full hover:bg-opacity-70 transition-all duration-200"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            <img
+              src={previewImage}
+              alt="UI预览"
+              className="max-w-full max-h-[90vh] object-contain"
+              onError={() => {
+                setError('图片加载失败');
+                setPreviewImage(null);
+              }}
+            />
+          </div>
+        </div>
+      )}
   );
 };
 

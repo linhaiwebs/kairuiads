@@ -29,7 +29,7 @@ const storage = multer.diskStorage({
 const upload = multer({ 
   storage: storage,
   limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB limit
+    fileSize: 500 * 1024 * 1024 // 500MB limit
   },
   fileFilter: function (req, file, cb) {
     if (file.fieldname === 'ui_image') {
@@ -39,9 +39,55 @@ const upload = multer({
       } else {
         cb(new Error('UI字段只能上传图片文件'));
       }
-    } else if (file.fieldname === 'source_file' || file.fieldname === 'download_file') {
-      // 源文件和下载文件允许所有格式
-      cb(null, true);
+    } else if (file.fieldname === 'source_file') {
+      // 源文件只允许PSD等媒体素材格式
+      const allowedMimes = [
+        'image/vnd.adobe.photoshop', // PSD
+        'application/x-photoshop', // PSD
+        'image/photoshop', // PSD
+        'image/x-photoshop', // PSD
+        'application/photoshop', // PSD
+        'application/psd', // PSD
+        'image/psd', // PSD
+        'application/octet-stream', // 通用二进制文件
+        'image/tiff', // TIFF
+        'image/x-tiff', // TIFF
+        'application/postscript', // AI
+        'application/illustrator', // AI
+        'image/svg+xml', // SVG
+        'application/x-indesign', // INDD
+        'application/x-sketch' // Sketch
+      ];
+      
+      const allowedExtensions = ['.psd', '.ai', '.eps', '.tiff', '.tif', '.svg', '.indd', '.sketch', '.fig'];
+      const fileExtension = file.originalname.toLowerCase().substring(file.originalname.lastIndexOf('.'));
+      
+      if (allowedMimes.includes(file.mimetype) || allowedExtensions.includes(fileExtension)) {
+        cb(null, true);
+      } else {
+        cb(new Error('源文件只支持PSD、AI、EPS、TIFF、SVG、INDD、Sketch、Figma等媒体素材格式'));
+      }
+    } else if (file.fieldname === 'download_file') {
+      // 下载文件只允许压缩文件格式
+      const allowedMimes = [
+        'application/zip',
+        'application/x-zip-compressed',
+        'application/x-rar-compressed',
+        'application/x-7z-compressed',
+        'application/gzip',
+        'application/x-tar',
+        'application/x-bzip2',
+        'application/octet-stream'
+      ];
+      
+      const allowedExtensions = ['.zip', '.rar', '.7z', '.tar', '.gz', '.bz2', '.tar.gz', '.tar.bz2'];
+      const fileExtension = file.originalname.toLowerCase().substring(file.originalname.lastIndexOf('.'));
+      
+      if (allowedMimes.includes(file.mimetype) || allowedExtensions.includes(fileExtension)) {
+        cb(null, true);
+      } else {
+        cb(new Error('下载文件只支持ZIP、RAR、7Z、TAR、GZ等压缩文件格式'));
+      }
     } else {
       cb(new Error('未知的文件字段'));
     }
