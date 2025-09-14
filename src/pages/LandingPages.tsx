@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { 
   Search, Plus, Eye, Edit, Trash2, Download, RefreshCw, 
   Filter, Calendar, Globe, Code, Image, FileText,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, X
 } from 'lucide-react';
 
 interface LandingPage {
@@ -31,6 +31,7 @@ const LandingPages: React.FC = () => {
   const [endDate, setEndDate] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   const perPage = 10;
 
@@ -120,6 +121,11 @@ const LandingPages: React.FC = () => {
     } catch (err) {
       setError('下载失败，请重试');
     }
+  };
+
+  const handlePreviewImage = (id: number) => {
+    const imageUrl = `/api/landing-pages/download/${id}/ui`;
+    setPreviewImage(imageUrl);
   };
 
   const formatDate = (dateString: string) => {
@@ -361,7 +367,9 @@ const LandingPages: React.FC = () => {
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">名称</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">地区</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">技术框架</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">文件</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">UI图片</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">源文件</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">下载文件</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">创建时间</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                 </tr>
@@ -388,36 +396,44 @@ const LandingPages: React.FC = () => {
                         {landingPage.tech_framework}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <div className="flex items-center space-x-2">
-                        {landingPage.ui_image && (
-                          <button
-                            onClick={() => handleDownload(landingPage.id, 'ui')}
-                            className="p-1 text-gray-400 hover:text-blue-600 transition-colors duration-200"
-                            title="下载UI图片"
-                          >
-                            <Image className="h-4 w-4" />
-                          </button>
-                        )}
-                        {landingPage.source_file && (
-                          <button
-                            onClick={() => handleDownload(landingPage.id, 'source')}
-                            className="p-1 text-gray-400 hover:text-green-600 transition-colors duration-200"
-                            title="下载源文件"
-                          >
-                            <Code className="h-4 w-4" />
-                          </button>
-                        )}
-                        {landingPage.download_file && (
-                          <button
-                            onClick={() => handleDownload(landingPage.id, 'download')}
-                            className="p-1 text-gray-400 hover:text-purple-600 transition-colors duration-200"
-                            title="下载文件"
-                          >
-                            <Download className="h-4 w-4" />
-                          </button>
-                        )}
-                      </div>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                      {landingPage.ui_image ? (
+                        <button
+                          onClick={() => handlePreviewImage(landingPage.id)}
+                          className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-all duration-200"
+                          title="预览UI图片"
+                        >
+                          <Image className="h-5 w-5" />
+                        </button>
+                      ) : (
+                        <span className="text-gray-400 text-sm">未上传</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                      {landingPage.source_file ? (
+                        <button
+                          onClick={() => handleDownload(landingPage.id, 'source')}
+                          className="p-2 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-lg transition-all duration-200"
+                          title="下载源文件"
+                        >
+                          <Code className="h-5 w-5" />
+                        </button>
+                      ) : (
+                        <span className="text-gray-400 text-sm">未上传</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                      {landingPage.download_file ? (
+                        <button
+                          onClick={() => handleDownload(landingPage.id, 'download')}
+                          className="p-2 text-purple-600 hover:text-purple-800 hover:bg-purple-50 rounded-lg transition-all duration-200"
+                          title="下载文件"
+                        >
+                          <Download className="h-5 w-5" />
+                        </button>
+                      ) : (
+                        <span className="text-gray-400 text-sm">未上传</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <div className="flex items-center">
@@ -509,7 +525,7 @@ const LandingPages: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
+
       {/* Image Preview Modal */}
       {previewImage && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
@@ -534,6 +550,7 @@ const LandingPages: React.FC = () => {
           </div>
         </div>
       )}
+    </div>
   );
 };
 

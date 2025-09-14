@@ -390,7 +390,7 @@ const EditLandingPage: React.FC = () => {
                       />
                     </label>
                   </div>
-                  <p className="text-xs text-gray-500">PNG, JPG, GIF 最大 10MB</p>
+                  <p className="text-xs text-gray-500">PNG, JPG, GIF 最大 500MB</p>
                   {files.ui_image && (
                     <p className="text-xs text-green-600 mt-2">
                       新文件: {files.ui_image.name}
@@ -414,12 +414,13 @@ const EditLandingPage: React.FC = () => {
                       <input
                         type="file"
                         name="source_file"
+                        accept=".psd,.ai,.eps,.tiff,.tif,.svg,.indd,.sketch,.fig"
                         onChange={handleFileChange}
                         className="sr-only"
                       />
                     </label>
                   </div>
-                  <p className="text-xs text-gray-500">任意格式 最大 10MB</p>
+                  <p className="text-xs text-gray-500">PSD, AI, EPS, TIFF, SVG 等媒体素材 最大 500MB</p>
                   {files.source_file && (
                     <p className="text-xs text-green-600 mt-2">
                       新文件: {files.source_file.name}
@@ -443,12 +444,13 @@ const EditLandingPage: React.FC = () => {
                       <input
                         type="file"
                         name="download_file"
+                        accept=".zip,.rar,.7z,.tar,.gz,.bz2"
                         onChange={handleFileChange}
                         className="sr-only"
                       />
                     </label>
                   </div>
-                  <p className="text-xs text-gray-500">任意格式 最大 10MB</p>
+                  <p className="text-xs text-gray-500">ZIP, RAR, 7Z, TAR, GZ 等压缩文件 最大 500MB</p>
                   {files.download_file && (
                     <p className="text-xs text-green-600 mt-2">
                       新文件: {files.download_file.name}
