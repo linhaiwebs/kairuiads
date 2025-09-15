@@ -32,11 +32,17 @@ npm run build
 - 前端开发服务器: http://localhost:5173
 - 后端API服务器: http://localhost:3001
 - 管理后台: http://localhost:3001/admin
+- 转换文件访问: http://localhost:3001/conver/{来源名称}/zhuanhuan.csv
 
 ## 默认登录信息
 
 - 用户名: `admin`
 - 密码: `admin123`
+
+## 转换文件访问认证
+
+- 用户名: `conver_user` (可通过 CONVER_USERNAME 环境变量修改)
+- 密码: `conver_pass_2024` (可通过 CONVER_PASSWORD 环境变量修改)
 
 ## 环境变量
 
@@ -63,6 +69,10 @@ CLOAKING_API_BASE_URL=https://cloaking.house/api
 
 # 服务器端口
 PORT=3001
+
+# 转换文件访问认证
+CONVER_USERNAME=conver_user
+CONVER_PASSWORD=conver_pass_2024
 ```
 
 ## 数据库设置
@@ -128,6 +138,8 @@ PORT=3001
 - 🛡️ 过滤系统 - 智能流量过滤
 - 👥 账号管理 - 用户权限管理
 - 📈 转化追踪 - Google Ads转化数据
+- 📁 文件管理 - 自动生成按来源分类的CSV文件
+- 🔐 文件保护 - 基本认证保护转换文件访问
 
 ## 技术栈
 

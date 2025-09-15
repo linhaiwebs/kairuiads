@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import fs from 'fs';
 
 // ES modules compatibility
 const __filename = fileURLToPath(import.meta.url);
@@ -55,6 +56,41 @@ const startServer = async () => {
     // Apply request logging middleware to ALL routes
     app.use(logApiRequest);
 
+    // 基本认证中间件用于保护 /conver 路径
+    const basicAuth = (req, res, next) => {
+      const auth = req.headers.authorization;
+      
+      if (!auth || !auth.startsWith('Basic ')) {
+        res.setHeader('WWW-Authenticate', 'Basic realm="Conversion Files"');
+        return res.status(401).json({ error: 'Authentication required' });
+      }
+      
+      const credentials = Buffer.from(auth.substring(6), 'base64').toString();
+      const [username, password] = credentials.split(':');
+      
+      // 简单的用户名密码验证
+      const validUsername = process.env.CONVER_USERNAME || 'conver_user';
+      const validPassword = process.env.CONVER_PASSWORD || 'conver_pass_2024';
+      
+      if (username === validUsername && password === validPassword) {
+        next();
+      } else {
+        res.setHeader('WWW-Authenticate', 'Basic realm="Conversion Files"');
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+    };
+
+    // 静态文件服务 - 保护 /conver 路径
+    app.use('/conver', basicAuth, express.static(path.join(__dirname, 'conver'), {
+      setHeaders: (res, filePath) => {
+        // 设置CSV文件的正确MIME类型
+        if (filePath.endsWith('.csv')) {
+          res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+          res.setHeader('Content-Disposition', 'inline');
+        }
+      }
+    }));
+
     // Routes - 落地页路由放在最前面
     app.use('/api', landingPagesRoutes.default);
     app.use('/api/auth', authRoutes.default);
@@ -83,6 +119,14 @@ const startServer = async () => {
       console.log('  - PUT /api/landing-pages/:id (更新落地页)');
       console.log('  - DELETE /api/landing-pages/:id (删除落地页)');
       console.log('  - GET /api/landing-pages/download/:id/:type (下载文件)');
+      console.log('  - POST /api/ggads/conversions (接收转化数据)');
+      console.log('  - GET /api/conversions (获取转化记录)');
+      console.log('  - POST /api/conversions/regenerate-files (重新生成CSV文件)');
+      console.log('  - GET /api/conversions/file-stats (获取文件统计)');
+      console.log('📁 Protected file access:');
+      console.log(`  - GET /conver/{source}/zhuanhuan.csv (需要认证)`);
+      console.log(`  - 用户名: ${process.env.CONVER_USERNAME || 'conver_user'}`);
+      console.log(`  - 密码: ${process.env.CONVER_PASSWORD || 'conver_pass_2024'}`);
     });
 
     // Graceful shutdown

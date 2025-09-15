@@ -25,9 +25,20 @@ interface ConversionStats {
   referrerUrls: Array<{ referrer_url: string; count: number }>;
 }
 
+interface FileStats {
+  totalSources: number;
+  sources: Array<{
+    sourceName: string;
+    filePath: string;
+    fileSize: number;
+    recordCount: number;
+    lastModified: string;
+  }>;
+}
 const ConversionRecords: React.FC = () => {
   const [records, setRecords] = useState<ConversionRecord[]>([]);
   const [stats, setStats] = useState<ConversionStats | null>(null);
+  const [fileStats, setFileStats] = useState<FileStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -53,6 +64,7 @@ const ConversionRecords: React.FC = () => {
   useEffect(() => {
     loadRecords();
     loadStats();
+    loadFileStats();
   }, [currentPage, searchTerm, conversionNameFilter, referrerUrlFilter, startDate, endDate]);
 
   useEffect(() => {
@@ -134,6 +146,49 @@ const ConversionRecords: React.FC = () => {
     }
   };
 
+  const loadFileStats = async () => {
+    try {
+      const response = await fetch('/api/conversions/file-stats', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+        }
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setFileStats(data.data);
+      }
+    } catch (err) {
+      console.error('获取文件统计失败:', err);
+    }
+  };
+
+  const handleRegenerateFiles = async () => {
+    if (confirm('确定要重新生成所有CSV文件吗？这将根据数据库中的所有记录重新创建文件。')) {
+      try {
+        setError('');
+        setSuccess('');
+        
+        const response = await fetch('/api/conversions/regenerate-files', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+          }
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          setSuccess(data.message);
+          loadFileStats(); // 重新加载文件统计
+        } else {
+          setError(data.message || '重新生成文件失败');
+        }
+      } catch (err) {
+        setError('重新生成文件失败，请重试');
+      }
+    }
+  };
+
   const handleExport = async () => {
     try {
       const params = new URLSearchParams({
@@ -199,6 +254,8 @@ const ConversionRecords: React.FC = () => {
         setSuccess(data.message);
         loadRecords();
         loadStats();
+        loadFileStats();
+        loadFileStats();
       } else {
         setError(data.message || '导入失败');
         if (data.errors) {
@@ -245,6 +302,7 @@ const ConversionRecords: React.FC = () => {
           setSuccess('转化记录删除成功！');
           loadRecords();
           loadStats();
+          loadFileStats();
         } else {
           setError(data.message || '删除失败');
         }
@@ -273,7 +331,7 @@ const ConversionRecords: React.FC = () => {
 
       {/* 统计卡片 */}
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
@@ -326,6 +384,20 @@ const ConversionRecords: React.FC = () => {
               </div>
               <div className="p-3 rounded-lg bg-pink-500">
                 <Globe className="h-6 w-6 text-white" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-500 text-sm font-medium">CSV文件</p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">
+                  {fileStats?.totalSources || 0}
+                </p>
+              </div>
+              <div className="p-3 rounded-lg bg-orange-500">
+                <FileText className="h-6 w-6 text-white" />
               </div>
             </div>
           </div>
@@ -638,8 +710,64 @@ const ConversionRecords: React.FC = () => {
           </div>
         )}
       </div>
+
+      <button
+        onClick={handleRegenerateFiles}
+        className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors duration-200 flex items-center space-x-2"
+      >
+        <RefreshCw className="h-4 w-4" />
+        <span>重新生成文件</span>
+      </button>
     </div>
   );
+    {/* 文件统计信息 */}
+    {fileStats && fileStats.sources.length > 0 && (
+      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">CSV文件统计</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {fileStats.sources.map((source, index) => (
+            <div key={index} className="bg-gray-50 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-medium text-gray-900">{source.sourceName}</h4>
+                <span className="text-xs text-gray-500">
+                  {(source.fileSize / 1024).toFixed(1)} KB
+                </span>
+              </div>
+              <div className="text-sm text-gray-600 space-y-1">
+                <div>记录数: {source.recordCount}</div>
+                <div>更新时间: {formatDateTime(source.lastModified, userTimezone)}</div>
+                <div className="mt-2">
+                  <a
+                    href={`/conver/${source.sourceName}/zhuanhuan.csv`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 text-xs flex items-center"
+                  >
+                    <Download className="h-3 w-3 mr-1" />
+                    访问CSV文件
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+          <div className="flex items-start space-x-3">
+            <AlertCircle className="h-5 w-5 text-blue-500 mt-0.5" />
+            <div>
+              <h4 className="font-medium text-blue-900 mb-2">文件访问说明</h4>
+              <ul className="text-sm text-blue-800 space-y-1">
+                <li>• 访问格式: <code className="bg-blue-100 px-1 rounded">域名/conver/来源名称/zhuanhuan.csv</code></li>
+                <li>• 需要基本认证 (用户名/密码)</li>
+                <li>• 每次新增转化记录时自动更新对应文件</li>
+                <li>• 文件按来源域名自动分类存储</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+
 };
 
 export default ConversionRecords;

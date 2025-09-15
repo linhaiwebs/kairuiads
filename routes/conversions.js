@@ -2,6 +2,7 @@ import express from 'express';
 import { getConnection } from '../config/database.js';
 import { authenticateToken } from '../middleware/auth.js';
 import { logConversionRequest } from '../middleware/requestLogger.js';
+import conversionFileManager from '../utils/conversionFileManager.js';
 
 const router = express.Router();
 
@@ -117,6 +118,26 @@ router.post('/ggads/conversions', logConversionRequest, async (req, res) => {
     ]);
 
     console.log('Conversion data saved with ID:', result.insertId);
+    
+    // 添加记录到文件系统
+    const fileResult = await conversionFileManager.addConversionRecord({
+      id: result.insertId,
+      gclid,
+      conversion_name,
+      conversion_time: formattedConversionTime,
+      stock_code,
+      user_agent: user_agent || '',
+      referrer_url: referrer_url || '',
+      client_ip: client_ip || '',
+      created_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
+    });
+    
+    if (fileResult.success) {
+      console.log(`📁 Conversion record added to file: ${fileResult.sourceName}`);
+    } else {
+      console.error(`❌ Failed to add record to file: ${fileResult.error}`);
+    }
+    
     res.status(200).json({
       status: 'success',
       message: 'Data received successfully.',
@@ -434,6 +455,68 @@ router.post('/conversions/import', authenticateToken, async (req, res) => {
     res.status(500).json({
       success: false,
       message: '导入失败'
+    });
+  }
+});
+
+// POST /api/conversions/regenerate-files - 重新生成所有CSV文件
+router.post('/conversions/regenerate-files', authenticateToken, async (req, res) => {
+  try {
+    const db = getConnection();
+    
+    // 获取所有转换记录
+    const [allRecords] = await db.execute(`
+      SELECT id, gclid, conversion_name, conversion_time, stock_code,
+             user_agent, referrer_url, client_ip, created_at
+      FROM conversions 
+      ORDER BY created_at ASC
+    `);
+
+    // 重新生成所有CSV文件
+    const result = await conversionFileManager.regenerateAllCsvFiles(allRecords);
+    
+    if (result.success) {
+      res.json({
+        success: true,
+        message: `成功重新生成 ${result.results.length} 个来源的CSV文件`,
+        data: result.results
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: '重新生成CSV文件失败',
+        error: result.error
+      });
+    }
+  } catch (error) {
+    console.error('Error regenerating CSV files:', error);
+    res.status(500).json({
+      success: false,
+      message: '重新生成CSV文件失败'
+    });
+  }
+});
+
+// GET /api/conversions/file-stats - 获取文件统计信息
+router.get('/conversions/file-stats', authenticateToken, async (req, res) => {
+  try {
+    const sourceDirectories = conversionFileManager.getSourceDirectories();
+    const stats = sourceDirectories.map(sourceName => 
+      conversionFileManager.getSourceFileStats(sourceName)
+    ).filter(stat => stat !== null);
+
+    res.json({
+      success: true,
+      data: {
+        totalSources: sourceDirectories.length,
+        sources: stats
+      }
+    });
+  } catch (error) {
+    console.error('Error getting file stats:', error);
+    res.status(500).json({
+      success: false,
+      message: '获取文件统计失败'
     });
   }
 });
