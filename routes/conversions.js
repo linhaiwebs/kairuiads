@@ -97,6 +97,9 @@ router.post('/ggads/conversions', logConversionRequest, async (req, res) => {
     const client_ip = getClientIP(req);
     const db = getConnection();
 
+    // 将 ISO 8601 格式转换为 MySQL DATETIME 格式
+    const formattedConversionTime = new Date(conversion_time).toISOString().slice(0, 19).replace('T', ' ');
+
     // 插入数据到数据库
     const [result] = await db.execute(`
       INSERT INTO conversions (
@@ -106,7 +109,7 @@ router.post('/ggads/conversions', logConversionRequest, async (req, res) => {
     `, [
       gclid,
       conversion_name,
-      conversion_time,
+      formattedConversionTime,
       stock_code,
       user_agent || null,
       referrer_url || null,
