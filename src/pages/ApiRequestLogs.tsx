@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { formatDateTime } from '../utils/dateUtils';
 import { 
   Search, Filter, Calendar, RefreshCw, Trash2, 
   Activity, Clock, Globe, AlertCircle, CheckCircle,
@@ -54,6 +55,9 @@ const ApiRequestLogs: React.FC = () => {
   // 详情查看状态
   const [selectedLog, setSelectedLog] = useState<ApiLog | null>(null);
 
+  // 时区状态
+  const [userTimezone, setUserTimezone] = useState<string>('Asia/Shanghai');
+
   // 端点选项
   const endpointOptions = [
     { value: '', label: '所有端点' },
@@ -89,6 +93,21 @@ const ApiRequestLogs: React.FC = () => {
   useEffect(() => {
     loadLogs();
     loadStats();
+    
+    // 监听时区变化事件
+    const handleTimezoneChange = (event: CustomEvent) => {
+      setUserTimezone(event.detail.timezone);
+    };
+    
+    window.addEventListener('timezoneChanged', handleTimezoneChange as EventListener);
+    
+    // 初始化时区
+    const savedTimezone = localStorage.getItem('user_timezone') || 'Asia/Shanghai';
+    setUserTimezone(savedTimezone);
+    
+    return () => {
+      window.removeEventListener('timezoneChanged', handleTimezoneChange as EventListener);
+    };
   }, [currentPage, searchTerm, statusFilter, methodFilter, startDate, endDate, endpointFilter]);
 
   useEffect(() => {
@@ -186,17 +205,6 @@ const ApiRequestLogs: React.FC = () => {
         setError('清除日志失败，请重试');
       }
     }
-  };
-
-  const formatDateTime = (dateString: string) => {
-    return new Date(dateString).toLocaleString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
   };
 
   const getStatusColor = (success: boolean, statusCode: number) => {
@@ -502,7 +510,7 @@ const ApiRequestLogs: React.FC = () => {
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                       <div className="flex items-center">
                         <Clock className="h-3 w-3 mr-1" />
-                        {formatDateTime(log.request_time)}
+                        {formatDateTime(log.request_time, userTimezone)}
                       </div>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">

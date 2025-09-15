@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { formatDateTime, formatTimestamp } from '../utils/dateUtils';
 import { 
   Search, Filter, Calendar, Download, Upload, RefreshCw,
   TrendingUp, MousePointer, Clock, Globe, Eye, FileText,
@@ -45,6 +46,9 @@ const ConversionRecords: React.FC = () => {
   // 导入状态
   const [isImporting, setIsImporting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // 时区状态
+  const [userTimezone, setUserTimezone] = useState<string>('Asia/Shanghai');
 
   useEffect(() => {
     loadRecords();
@@ -52,12 +56,27 @@ const ConversionRecords: React.FC = () => {
   }, [currentPage, searchTerm, conversionNameFilter, referrerUrlFilter, startDate, endDate]);
 
   useEffect(() => {
+    // 监听时区变化事件
+    const handleTimezoneChange = (event: CustomEvent) => {
+      setUserTimezone(event.detail.timezone);
+    };
+    
+    window.addEventListener('timezoneChanged', handleTimezoneChange as EventListener);
+    
+    // 初始化时区
+    const savedTimezone = localStorage.getItem('user_timezone') || 'Asia/Shanghai';
+    setUserTimezone(savedTimezone);
+    
     // 默认显示当天的记录
     const today = new Date().toISOString().split('T')[0];
     if (!startDate && !endDate) {
       setStartDate(today);
       setEndDate(today);
     }
+    
+    return () => {
+      window.removeEventListener('timezoneChanged', handleTimezoneChange as EventListener);
+    };
   }, []);
 
   const loadRecords = async () => {
@@ -192,17 +211,6 @@ const ConversionRecords: React.FC = () => {
         fileInputRef.current.value = '';
       }
     }
-  };
-
-  const formatDateTime = (dateString: string) => {
-    return new Date(dateString).toLocaleString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
   };
 
   const truncateText = (text: string, maxLength: number = 30) => {
@@ -517,7 +525,7 @@ const ConversionRecords: React.FC = () => {
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                       <div className="flex items-center">
                         <Clock className="h-3 w-3 mr-1" />
-                        {formatDateTime(record.conversion_time)}
+                        {formatDateTime(record.conversion_time, userTimezone)}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-500 max-w-xs">

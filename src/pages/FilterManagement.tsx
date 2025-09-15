@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { apiService } from '../services/apiService';
+import { formatTimestamp } from '../utils/dateUtils';
 import { 
   Search, Plus, Eye, Edit, Trash2, RotateCcw, 
   RefreshCw, Filter, Calendar, Shield, List,
@@ -32,11 +33,29 @@ const FilterManagement: React.FC = () => {
   const [dateRanges, setDateRanges] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  
+  // 时区状态
+  const [userTimezone, setUserTimezone] = useState<string>('Asia/Shanghai');
 
   const perPage = 10;
 
   useEffect(() => {
     loadFilters();
+    
+    // 监听时区变化事件
+    const handleTimezoneChange = (event: CustomEvent) => {
+      setUserTimezone(event.detail.timezone);
+    };
+    
+    window.addEventListener('timezoneChanged', handleTimezoneChange as EventListener);
+    
+    // 初始化时区
+    const savedTimezone = localStorage.getItem('user_timezone') || 'Asia/Shanghai';
+    setUserTimezone(savedTimezone);
+    
+    return () => {
+      window.removeEventListener('timezoneChanged', handleTimezoneChange as EventListener);
+    };
   }, [currentPage, searchTerm, statusFilter, listTypeFilter, dateRanges]);
 
   const loadFilters = async () => {
@@ -155,16 +174,6 @@ const FilterManagement: React.FC = () => {
       if (dateStr.includes('-')) {
         const [year, month, day] = dateStr.split('-');
         return `${day}.${month}.${year}`;
-      }
-      return dateStr;
-    };
-
-    if (startDate && endDate) {
-      return `${formatSingle(startDate)} - ${formatSingle(endDate)}`;
-    }
-    return '';
-  };
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -419,7 +428,7 @@ const FilterManagement: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <div className="flex items-center">
                         <Calendar className="h-3 w-3 mr-1" />
-                        {formatDate(filter.time_created)}
+                        {formatTimestamp(filter.time_created, userTimezone)}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

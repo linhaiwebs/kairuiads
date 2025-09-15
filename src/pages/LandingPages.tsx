@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { apiService } from '../services/apiService';
+import { formatDate } from '../utils/dateUtils';
 import { 
   Search, Plus, Eye, Edit, Trash2, Download, RefreshCw, 
   Filter, Calendar, Globe, Code, Image, FileText,
@@ -34,11 +35,29 @@ const LandingPages: React.FC = () => {
   const [success, setSuccess] = useState('');
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
+  
+  // 时区状态
+  const [userTimezone, setUserTimezone] = useState<string>('Asia/Shanghai');
 
   const perPage = 10;
 
   useEffect(() => {
     loadLandingPages();
+    
+    // 监听时区变化事件
+    const handleTimezoneChange = (event: CustomEvent) => {
+      setUserTimezone(event.detail.timezone);
+    };
+    
+    window.addEventListener('timezoneChanged', handleTimezoneChange as EventListener);
+    
+    // 初始化时区
+    const savedTimezone = localStorage.getItem('user_timezone') || 'Asia/Shanghai';
+    setUserTimezone(savedTimezone);
+    
+    return () => {
+      window.removeEventListener('timezoneChanged', handleTimezoneChange as EventListener);
+    };
   }, [currentPage, searchTerm, regionFilter, startDate, endDate]);
 
   const loadLandingPages = async () => {
@@ -166,14 +185,6 @@ const LandingPages: React.FC = () => {
     } finally {
       setPreviewLoading(false);
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
   };
 
   const getRegionColor = (region: string) => {
@@ -421,7 +432,7 @@ const LandingPages: React.FC = () => {
                       {landingPage.id}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(landingPage.date)}
+                      {formatDate(landingPage.date, userTimezone)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {landingPage.name}
@@ -483,7 +494,7 @@ const LandingPages: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <div className="flex items-center">
                         <Calendar className="h-3 w-3 mr-1" />
-                        {formatDate(landingPage.created_at)}
+                        {formatDate(landingPage.created_at, userTimezone)}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import TimezoneSelector from './TimezoneSelector';
 import { 
   Menu, X, Home, Activity, BarChart3, MousePointer, 
   LogOut, Settings, Shield, ChevronDown, ChevronRight, Users, TrendingUp, Filter,
@@ -195,6 +196,7 @@ const DashboardLayout: React.FC = () => {
             </button>
 
             <div className="flex items-center space-x-4">
+              <TimezoneSelector />
               <span className="text-gray-700 text-sm">欢迎，{user?.username}</span>
             </div>
           </div>

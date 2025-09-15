@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { apiService } from '../services/apiService';
+import { formatTimestamp } from '../utils/dateUtils';
 import { 
   Search, Plus, Eye, Edit, Trash2, Play, Pause, 
   Download, RotateCcw, RefreshCw, Filter, X,
@@ -72,11 +73,29 @@ const FlowManagement: React.FC = () => {
   // 详情模态窗口状态
   const [selectedFlow, setSelectedFlow] = useState<FlowDetails | null>(null);
   const [loadingDetails, setLoadingDetails] = useState(false);
+  
+  // 时区状态
+  const [userTimezone, setUserTimezone] = useState<string>('Asia/Shanghai');
 
   const perPage = 10;
 
   useEffect(() => {
     loadFlows();
+    
+    // 监听时区变化事件
+    const handleTimezoneChange = (event: CustomEvent) => {
+      setUserTimezone(event.detail.timezone);
+    };
+    
+    window.addEventListener('timezoneChanged', handleTimezoneChange as EventListener);
+    
+    // 初始化时区
+    const savedTimezone = localStorage.getItem('user_timezone') || 'Asia/Shanghai';
+    setUserTimezone(savedTimezone);
+    
+    return () => {
+      window.removeEventListener('timezoneChanged', handleTimezoneChange as EventListener);
+    };
   }, [currentPage, searchTerm, statusFilter]);
 
   const loadFlows = async () => {
@@ -145,16 +164,6 @@ const FlowManagement: React.FC = () => {
       default:
         return status;
     }
-  };
-
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp * 1000).toLocaleDateString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
   };
 
   const maskLabel = (label: string) => {
@@ -488,7 +497,7 @@ const FlowManagement: React.FC = () => {
                       {flow.flow_id}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(flow.time_created)}
+                      {formatTimestamp(flow.time_created, userTimezone)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
                       {maskLabel(flow.label)}

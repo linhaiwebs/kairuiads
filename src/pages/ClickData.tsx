@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { apiService } from '../services/apiService';
 import MultiSelect from '../components/MultiSelect';
+import { formatTimestamp } from '../utils/dateUtils';
 import { 
   MousePointer, BarChart3, Calendar, Globe, Filter, 
   RefreshCw, Download, Eye, ExternalLink, Clock,
@@ -60,6 +61,9 @@ const ClickData: React.FC = () => {
   const [operatingSystems, setOperatingSystems] = useState<FilterOption[]>([]);
   const [browsers, setBrowsers] = useState<FilterOption[]>([]);
   const [languages, setLanguages] = useState<FilterOption[]>([]);
+  
+  // 时区状态
+  const [userTimezone, setUserTimezone] = useState<string>('Asia/Shanghai');
 
   // Filter types options
   const filterTypesOptions = [
@@ -99,6 +103,21 @@ const ClickData: React.FC = () => {
   useEffect(() => {
     loadFilterOptions();
     loadClicks();
+    
+    // 监听时区变化事件
+    const handleTimezoneChange = (event: CustomEvent) => {
+      setUserTimezone(event.detail.timezone);
+    };
+    
+    window.addEventListener('timezoneChanged', handleTimezoneChange as EventListener);
+    
+    // 初始化时区
+    const savedTimezone = localStorage.getItem('user_timezone') || 'Asia/Shanghai';
+    setUserTimezone(savedTimezone);
+    
+    return () => {
+      window.removeEventListener('timezoneChanged', handleTimezoneChange as EventListener);
+    };
   }, []);
 
   useEffect(() => {
@@ -230,12 +249,6 @@ const ClickData: React.FC = () => {
       return `${formatSingle(startDate)} - ${formatSingle(endDate)}`;
     }
     return '';
-  };
-
-  const formatTimestamp = (timestamp: number) => {
-    if (!timestamp) return '-';
-    const date = new Date(timestamp * 1000);
-    return date.toLocaleTimeString();
   };
 
   const getResultColor = (result: string) => {
@@ -714,7 +727,7 @@ const ClickData: React.FC = () => {
                         </div>
                         <div className="flex items-center text-xs">
                           <Clock className="h-3 w-3 mr-1" />
-                          {formatTimestamp(click.time_created)}
+                          {formatTimestamp(click.time_created, userTimezone)}
                         </div>
                       </div>
                     </td>

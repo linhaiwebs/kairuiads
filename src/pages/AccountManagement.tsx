@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { apiService } from '../services/apiService';
+import { formatDateTime } from '../utils/dateUtils';
 import { 
   Search, Plus, Eye, Edit, Trash2, Users, 
   RefreshCw, Filter, Tag, Mail, Phone, Calendar
@@ -36,12 +37,30 @@ const AccountManagement: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [error, setError] = useState('');
+  
+  // 时区状态
+  const [userTimezone, setUserTimezone] = useState<string>('Asia/Shanghai');
 
   const perPage = 10;
 
   useEffect(() => {
     loadAccounts();
     loadCategories();
+    
+    // 监听时区变化事件
+    const handleTimezoneChange = (event: CustomEvent) => {
+      setUserTimezone(event.detail.timezone);
+    };
+    
+    window.addEventListener('timezoneChanged', handleTimezoneChange as EventListener);
+    
+    // 初始化时区
+    const savedTimezone = localStorage.getItem('user_timezone') || 'Asia/Shanghai';
+    setUserTimezone(savedTimezone);
+    
+    return () => {
+      window.removeEventListener('timezoneChanged', handleTimezoneChange as EventListener);
+    };
   }, [currentPage, searchTerm, statusFilter, categoryFilter]);
 
   const loadAccounts = async () => {
@@ -117,16 +136,6 @@ const AccountManagement: React.FC = () => {
       default:
         return status;
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
   };
 
   const handleDeleteAccount = async (accountId: number) => {
@@ -373,14 +382,14 @@ const AccountManagement: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <div className="flex items-center">
                           <Calendar className="h-3 w-3 mr-1" />
-                          {formatDate(account.created_at)}
+                          {formatDateTime(account.created_at, userTimezone)}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {account.last_login ? (
                           <div className="flex items-center">
                             <Calendar className="h-3 w-3 mr-1" />
-                            {formatDate(account.last_login)}
+                            {formatDateTime(account.last_login, userTimezone)}
                           </div>
                         ) : (
                           <span className="text-gray-400">从未登录</span>
