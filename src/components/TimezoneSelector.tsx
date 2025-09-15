@@ -47,6 +47,7 @@ const TimezoneSelector: React.FC<TimezoneSelectorProps> = ({ className = '' }) =
 
   const handleTimezoneChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newTimezone = e.target.value;
+    console.log('🕐 [TimezoneSelector] Timezone changed from', selectedTimezone, 'to', newTimezone);
     setSelectedTimezone(newTimezone);
     localStorage.setItem('user_timezone', newTimezone);
     
@@ -54,6 +55,7 @@ const TimezoneSelector: React.FC<TimezoneSelectorProps> = ({ className = '' }) =
     window.dispatchEvent(new CustomEvent('timezoneChanged', { 
       detail: { timezone: newTimezone } 
     }));
+    console.log('🕐 [TimezoneSelector] Dispatched timezoneChanged event');
   };
 
   const getCurrentTime = () => {

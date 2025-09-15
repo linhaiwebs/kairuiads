@@ -21,7 +21,16 @@ export const formatDateTime = (
   if (!dateString) return '-';
   
   try {
-    const date = new Date(dateString);
+    // 如果 dateString 是 MySQL DATETIME 格式 (YYYY-MM-DD HH:MM:SS)，需要明确指定为 UTC
+    let date: Date;
+    if (dateString.match(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/)) {
+      // MySQL DATETIME 格式，假设为 UTC 时间
+      date = new Date(dateString + 'Z');
+    } else {
+      // 其他格式，直接解析
+      date = new Date(dateString);
+    }
+    
     const timezone = targetTimeZone || getUserTimezone();
     
     const defaultOptions: Intl.DateTimeFormatOptions = {

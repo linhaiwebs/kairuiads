@@ -58,6 +58,7 @@ const ConversionRecords: React.FC = () => {
   useEffect(() => {
     // 监听时区变化事件
     const handleTimezoneChange = (event: CustomEvent) => {
+      console.log('🕐 [ConversionRecords] Timezone changed to:', event.detail.timezone);
       setUserTimezone(event.detail.timezone);
     };
     
@@ -65,6 +66,7 @@ const ConversionRecords: React.FC = () => {
     
     // 初始化时区
     const savedTimezone = localStorage.getItem('user_timezone') || 'Asia/Shanghai';
+    console.log('🕐 [ConversionRecords] Initial timezone:', savedTimezone);
     setUserTimezone(savedTimezone);
     
     // 默认显示当天的记录
@@ -525,7 +527,7 @@ const ConversionRecords: React.FC = () => {
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                       <div className="flex items-center">
                         <Clock className="h-3 w-3 mr-1" />
-                        {formatDateTime(record.conversion_time, userTimezone)}
+                        {formatDateTime(record.conversion_time, userTimezone)} ({userTimezone})
                       </div>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-500 max-w-xs">
