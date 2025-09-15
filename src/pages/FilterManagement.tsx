@@ -174,6 +174,16 @@ const FilterManagement: React.FC = () => {
       if (dateStr.includes('-')) {
         const [year, month, day] = dateStr.split('-');
         return `${day}.${month}.${year}`;
+      }
+      return dateStr;
+    };
+
+    if (startDate && endDate) {
+      return `${formatSingle(startDate)} - ${formatSingle(endDate)}`;
+    }
+    return '';
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
