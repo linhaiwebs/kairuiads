@@ -177,9 +177,13 @@ const FilterManagement: React.FC = () => {
       }
       return dateStr;
     };
-
+    
     if (startDate && endDate) {
-      return `${formatSingle(startDate)} - ${formatSingle(endDate)}`;
+      return `${formatSingle(startDate)}-${formatSingle(endDate)}`;
+    } else if (startDate) {
+      return formatSingle(startDate);
+    } else if (endDate) {
+      return formatSingle(endDate);
     }
     return '';
   };
